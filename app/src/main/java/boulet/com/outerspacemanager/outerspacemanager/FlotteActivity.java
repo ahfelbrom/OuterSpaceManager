@@ -10,9 +10,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
-import okio.BufferedSource;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -91,8 +92,16 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
                         Toast.makeText(getApplicationContext(), "La construction à commencé !", Toast.LENGTH_LONG).show();
                         break;
                     case 401 :
-                        BufferedSource res = response.errorBody().source();
-                        Toast.makeText(getApplicationContext(), res.toString(), Toast.LENGTH_LONG).show();
+                        String res = "";
+                        try {
+                            res = response.errorBody().string();
+                        } catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        Gson gson = new Gson();
+                        ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
+                        Toast.makeText(getApplicationContext(), er.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
             @Override
