@@ -1,6 +1,5 @@
 package boulet.com.outerspacemanager.outerspacemanager;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,42 +7,40 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 
-import okio.BufferedSource;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class FlotteActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class VaisseauActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private ListView listShips;
-    private Button btnAddShip;
     private Ship[] flotte;
-
+    private TextView tvTitleFlotte;
     public static final String PREFS_NAME = "TOKEN_FILE";
     private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_flotte);
+        setContentView(R.layout.activity_add_ship);
 
-        listShips = (ListView) findViewById(R.id.listViewFlotte);
+        tvTitleFlotte = findViewById(R.id.tvTitleFlotte);
+        tvTitleFlotte.setText("Ajouter un vaisseau");
+        listShips = findViewById(R.id.listViewFlotte);
         listShips.setOnItemClickListener(this);
-        btnAddShip = (Button) findViewById(R.id.btnAddShip);
-        btnAddShip.setOnClickListener(this);
-
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
 
         Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
         Api service = retrofit.create(Api.class);
-        Call<Ships> request = service.GetShips(token);
+        Call<Ships> request = service.GetAllShips(token);
 
         request.enqueue(new Callback<Ships>() {
             @Override
@@ -86,13 +83,10 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
         request.enqueue(new Callback<CodeResponse>() {
             @Override
             public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                switch (response.code()) {
-                    case 200 :
-                        Toast.makeText(getApplicationContext(), "La construction à commencé !", Toast.LENGTH_LONG).show();
-                        break;
-                    case 401 :
-                        BufferedSource res = response.errorBody().source();
-                        Toast.makeText(getApplicationContext(), res.toString(), Toast.LENGTH_LONG).show();
+                if(response.code() != 200){
+                    Toast.makeText(getApplicationContext(), "Une erreur est survenue, ne spam pas !", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "La construction à commencé !", Toast.LENGTH_LONG).show();
                 }
             }
             @Override
@@ -101,14 +95,5 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
                 Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == btnAddShip.getId())
-        {
-            Intent myIntent = new Intent(getApplicationContext(), VaisseauActivity.class);
-            startActivity(myIntent);
-        }
     }
 }

@@ -7,4 +7,5 @@
     <string name="flotte">Flotte</string>
     <string name="building">Bâtiments</string>
     <string name="general_view">Vue générale</string>
+    <string name="addNewShip">Ajouter un vaisseau</string>
 </resources>

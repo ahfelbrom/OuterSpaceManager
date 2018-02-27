@@ -22,6 +22,7 @@
         <activity android:name=".BuildingActivity" />
         <activity android:name=".GeneralActivity" />
         <activity android:name=".FlotteActivity" />
+        <activity android:name=".VaisseauActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".ChantierActivity" />
     </application>
