@@ -5,16 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dynamitechetan.flowinggradient.FlowingGradientClass;
-
 import java.io.IOException;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,8 +29,6 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flotte);
-
-        LinearLayout rl = (LinearLayout) findViewById(R.id.bg_flotte);
 
         listShips = (ListView) findViewById(R.id.listViewFlotte);
         listShips.setOnItemClickListener(this);
@@ -61,12 +53,12 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
                     }
                 }else{
                     flotte = response.body().getShips();
-                    //Toast.makeText(getApplicationContext(), response.body().getShips().toString(), Toast.LENGTH_LONG).show();
-
-                    //listShips.setAdapter(new ArrayAdapter(getApplicationContext(),  android.R.layout.simple_list_item_1, flotte));
-
+                    for (Ship s : response.body().getShips()) {
+                        Toast.makeText(getApplicationContext(), s.toString(), Toast.LENGTH_LONG).show();
+                    }
                     FlotteAdapter adapter = new FlotteAdapter(getApplicationContext(), flotte );
                     listShips.setAdapter(adapter);
+                    Toast.makeText(getApplicationContext(), "c'est fait", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -82,7 +74,6 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Ship ship = flotte[position];
         ship.setAmount("1");
-        //Toast.makeText(getApplicationContext(), ship.toString(), Toast.LENGTH_LONG).show();
 
         Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
         Api service = retrofit.create(Api.class);

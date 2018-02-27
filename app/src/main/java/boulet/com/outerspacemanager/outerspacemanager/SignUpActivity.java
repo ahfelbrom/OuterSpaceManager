@@ -43,8 +43,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         inputUsername = (EditText) findViewById(R.id.inputUsername);
         inputPassword = (EditText) findViewById(R.id.inputPassword);
 
-        LinearLayout rl = (LinearLayout) findViewById(R.id.bg_login);
-
         btnCreate.setOnClickListener(this);
         btnValider.setOnClickListener(this);
 

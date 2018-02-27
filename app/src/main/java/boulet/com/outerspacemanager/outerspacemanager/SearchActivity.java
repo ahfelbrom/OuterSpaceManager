@@ -113,7 +113,6 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
                                     .setContentTitle("Outer Space Manager - Recherche terminée")
                                     .setContentText("Hey ! Ta " + search.getName() + " est terminé !")
-                                    .setSmallIcon(R.drawable.logo)
                                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                                     .setVibrate(new long[] { 1000, 1000, 0, 0, 1000, 1000})
                                     .setContentIntent(resultPendingIntent)

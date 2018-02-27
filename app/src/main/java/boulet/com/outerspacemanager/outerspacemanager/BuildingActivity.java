@@ -118,7 +118,6 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
                                     .setContentTitle("Outer Space Manager - Construction terminée")
                                     .setContentText("Hey ! Ton " + building.getName() + " est terminé !")
                                     .setContentIntent(resultPendingIntent)
-                                    .setSmallIcon(R.drawable.logo)
                                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                                     .setVibrate(new long[]{1000, 1000, 0, 0, 1000, 1000})
                                     .setShowWhen(true)

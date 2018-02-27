@@ -33,6 +33,4 @@ public class FlotteAdapter extends ArrayAdapter<Ship> {
 
         return rowView;
     }
-
-
 }
