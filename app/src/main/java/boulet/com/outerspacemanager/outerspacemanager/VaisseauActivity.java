@@ -37,7 +37,7 @@ public class VaisseauActivity extends AppCompatActivity implements AdapterView.O
         btnReturnFleet.setOnClickListener(this);
 
         tvTitleFlotte = findViewById(R.id.tvTitleFlotte);
-        tvTitleFlotte.setText("Ajouter un vaisseau");
+        tvTitleFlotte.setText("Ajouter un vaisseau"); 
 
         listShips = findViewById(R.id.listViewFlotte);
         listShips.setOnItemClickListener(this);
