@@ -11,9 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.io.IOException;
 
@@ -60,7 +63,7 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
                     }
                 }else{
                     buildings = response.body().getBuildings();
-                    BuildingAdapter adapter = new BuildingAdapter(getApplicationContext(), buildings );
+                    ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, buildings);
                     listBuilding.setAdapter(adapter);
                 }
             }
@@ -81,6 +84,9 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
         {
             Intent i = new Intent(getApplicationContext(), BuildingDetailsActivity.class);
             i.putExtra("monTextAAfficher","coucou");
+            Gson json = new Gson();
+            String jsonBuilding = json.toJson(buildings[position]);
+            i.putExtra("building", jsonBuilding);
             startActivity(i);
         }
         else

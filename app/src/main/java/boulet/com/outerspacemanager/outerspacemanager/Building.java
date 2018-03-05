@@ -135,6 +135,10 @@ public class Building {
 
     @Override
     public String toString() {
+        return this.getName();
+    }
+
+    public String toCompleteString() {
         Double time =  Double.parseDouble(this.getTimeToBuildLevel0()) + ( Double.parseDouble(this.getTimeToBuildByLevel()) * Double.parseDouble(this.getLevel()));
         Integer minutes = (int) Math.floor(time / 60);
         Integer seconds = (int) Math.floor(time % 60);
