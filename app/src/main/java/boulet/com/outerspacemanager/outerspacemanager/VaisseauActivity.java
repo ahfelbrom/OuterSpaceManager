@@ -1,5 +1,6 @@
 package boulet.com.outerspacemanager.outerspacemanager;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,11 +19,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class VaisseauActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class VaisseauActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     private ListView listShips;
     private Ship[] flotte;
     private TextView tvTitleFlotte;
+    private Button btnReturnFleet;
     public static final String PREFS_NAME = "TOKEN_FILE";
     private String token;
 
@@ -31,10 +33,15 @@ public class VaisseauActivity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_ship);
 
+        btnReturnFleet = findViewById(R.id.btnReturnFleet);
+        btnReturnFleet.setOnClickListener(this);
+
         tvTitleFlotte = findViewById(R.id.tvTitleFlotte);
         tvTitleFlotte.setText("Ajouter un vaisseau");
+
         listShips = findViewById(R.id.listViewFlotte);
         listShips.setOnItemClickListener(this);
+
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
 
@@ -95,5 +102,11 @@ public class VaisseauActivity extends AppCompatActivity implements AdapterView.O
                 Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intentToFleet = new Intent(getApplicationContext(), FlotteActivity.class);
+        startActivity(intentToFleet);
     }
 }

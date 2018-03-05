@@ -24,6 +24,7 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
 
     private ListView listShips;
     private Button btnAddShip;
+    private Button btnReturnMenu;
     private Ship[] flotte;
 
     public static final String PREFS_NAME = "TOKEN_FILE";
@@ -36,8 +37,12 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
 
         listShips = (ListView) findViewById(R.id.listViewFlotte);
         listShips.setOnItemClickListener(this);
+
         btnAddShip = (Button) findViewById(R.id.btnAddShip);
         btnAddShip.setOnClickListener(this);
+
+        btnReturnMenu = findViewById(R.id.btnReturnMenu);
+        btnReturnMenu.setOnClickListener(this);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
@@ -116,8 +121,13 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
     public void onClick(View v) {
         if (v.getId() == btnAddShip.getId())
         {
-            Intent myIntent = new Intent(getApplicationContext(), VaisseauActivity.class);
-            startActivity(myIntent);
+            Intent addShipIntent = new Intent(getApplicationContext(), VaisseauActivity.class);
+            startActivity(addShipIntent);
+        }
+        else if (v.getId() == btnReturnMenu.getId())
+        {
+            Intent MainIntent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(MainIntent);
         }
     }
 }
