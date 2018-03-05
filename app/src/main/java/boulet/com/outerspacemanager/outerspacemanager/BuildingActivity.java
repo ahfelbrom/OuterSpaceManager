@@ -38,10 +38,7 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_building);
 
-        listBuilding = (ListView) findViewById(R.id.listViewBuilding);
-        listBuilding.setOnItemClickListener(this);
-
-        LinearLayout rl = (LinearLayout) findViewById(R.id.bg_building);
+        listBuilding = (ListView) findViewById(R.id.lvFragList);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
@@ -63,9 +60,6 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
                     }
                 }else{
                     buildings = response.body().getBuildings();
-                    //listBuilding.setAdapter(new ArrayAdapter(getApplicationContext(),  android.R.layout.simple_list_item_1, buildings));
-                    //Toast.makeText(getApplicationContext(), buildings.toString(), Toast.LENGTH_LONG).show();
-
                     BuildingAdapter adapter = new BuildingAdapter(getApplicationContext(), buildings );
                     listBuilding.setAdapter(adapter);
                 }
@@ -77,12 +71,24 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
                 Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final Building building = buildings[position];
+        BuildListFragment fragA = (BuildListFragment) getSupportFragmentManager().findFragmentById(R.id.fragList);
+        BuildDetailsFragment fragB = (BuildDetailsFragment)getSupportFragmentManager().findFragmentById(R.id.fragDetails);
+        if(fragB == null || !fragB.isInLayout())
+        {
+            Intent i = new Intent(getApplicationContext(), BuildingDetailsActivity.class);
+            i.putExtra("monTextAAfficher","coucou");
+            startActivity(i);
+        }
+        else
+        {
+            fragB.fillTextView("coucou");
+        }
+
+        /*final Building building = buildings[position];
         //Toast.makeText(getApplicationContext(), search.getName(), Toast.LENGTH_LONG).show();
 
         Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
@@ -139,6 +145,6 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
                 Toast.makeText(getApplicationContext(), call.toString(), Toast.LENGTH_LONG).show();
                 Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
     }
 }
