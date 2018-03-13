@@ -42,8 +42,9 @@ public class GeneralActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if(response.code() != 200){
                     Toast.makeText(getApplicationContext(), "Une erreur est survenue !", Toast.LENGTH_LONG).show();
-                }else{
-                    //Toast.makeText(getApplicationContext(), "Connection...", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
                     UserResponse user = response.body();
                     String toDisplay = user.getUsername() + " (" + user.getPoints() + " points)\n";
                     toDisplay += "Gaz : " + Math.round(Double.parseDouble(user.getGas())) + "\n";

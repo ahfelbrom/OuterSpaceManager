@@ -122,8 +122,8 @@ public class Ship {
     @Override
     public String toString() {
         if(this.amount != null)
-            return this.amount + " " + this.name + "\n\t\t\t" + this.getLife() + " HP\n\t\t\t" + this.getShield() + " SP\n\t\t\t" + this.getMinAttack() + "-" + this.getMaxAttack() + " AP\n\t\t\t" + this.getSpeed() + " SPEED";
+            return this.amount + " " + this.name + "\n\t\t\t" + this.getLife() + " HP (Health Point)\n\t\t\t" + this.getShield() + " SP (Shield Point)\n\t\t\t" + this.getMinAttack() + "-" + this.getMaxAttack() + " AP (Attack Power)\n\t\t\t" + this.getSpeed() + " SPEED" + "Coût : " + this.getGasCost() + " Gaz & " + this.getMineralCost() + " minéraux";
         else
-            return this.name + " : " + this.getLife() + " HP\n\t\t\t" + this.getShield() + " SP\n\t\t\t" + this.getMinAttack() + "-" + this.getMaxAttack() + " AP\n\t\t\t" + this.getSpeed() + " SPEED";
+            return this.name + " : " + this.getLife() + " HP (Health Point)\n\t\t\t" + this.getShield() + " SP (Shield Point)\n\t\t\t" + this.getMinAttack() + "-" + this.getMaxAttack() + " AP (Attack Power)\n\t\t\t" + this.getSpeed() + " SPEED\n\t\t" + "Coût : " + this.getGasCost() + " Gaz & " + this.getMineralCost() + " minéraux";
     }
 }

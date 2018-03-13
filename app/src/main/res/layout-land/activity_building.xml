@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
+    <Button
+        android:id="@+id/btnMenuBat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/menu" />
+
     <fragment
         android:layout_width="0dp"
         android:layout_height="match_parent"
