@@ -8,12 +8,26 @@
     tools:context="boulet.com.outerspacemanager.outerspacemanager.GeneralActivity"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:text="@string/general_view" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnMenuGeneral"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Menu" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/general_view"
+            android:textAlignment="center"
+            android:textSize="30sp" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"

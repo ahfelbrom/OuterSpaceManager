@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
 import retrofit2.Call;
@@ -90,10 +92,21 @@ public class VaisseauActivity extends AppCompatActivity implements AdapterView.O
         request.enqueue(new Callback<CodeResponse>() {
             @Override
             public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                if(response.code() != 200){
-                    Toast.makeText(getApplicationContext(), "Une erreur est survenue, ne spam pas !", Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(getApplicationContext(), "La construction à commencé !", Toast.LENGTH_LONG).show();
+                switch (response.code()) {
+                    case 200 :
+                        Toast.makeText(getApplicationContext(), "La construction à commencée !", Toast.LENGTH_LONG).show();
+                        break;
+                    case 401 :
+                        String res = "";
+                        try {
+                            res = response.errorBody().string();
+                        } catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        Gson gson = new Gson();
+                        ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
+                        Toast.makeText(getApplicationContext(), er.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
             @Override

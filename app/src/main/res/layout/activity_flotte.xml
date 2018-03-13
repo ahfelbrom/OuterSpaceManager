@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
@@ -29,17 +29,18 @@
             android:text="@string/flotte"
             android:textAlignment="center"
             android:textSize="30sp" />
+
     </LinearLayout>
 
     <ListView
         android:id="@+id/listViewFlotte"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
     <Button
         android:id="@+id/btnAddShip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/addNewShip"/>
+        android:layout_gravity="center"
+        android:text="@string/addNewShip" />
 
 </LinearLayout>

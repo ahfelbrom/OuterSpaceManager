@@ -9,12 +9,22 @@
     android:orientation="vertical">
 
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:text="@string/building" />
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnMenuBat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/menu" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:text="@string/building" />
+    </LinearLayout>
 
     <fragment
         android:layout_width="wrap_content"

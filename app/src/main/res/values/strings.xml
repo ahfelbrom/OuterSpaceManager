@@ -11,4 +11,6 @@
     <string name="menu">Menu</string>
     <string name="retour">Retour</string>
     <string name="build_image_description">The image of the building</string>
+    <string name="build">Construire</string>
+    <string name="cost">Coût :</string>
 </resources>

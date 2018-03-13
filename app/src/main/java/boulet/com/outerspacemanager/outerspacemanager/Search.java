@@ -78,6 +78,11 @@ public class Search {
     }
 
     public String getLevel() {
+        if (level == null)
+        {
+            return "0";
+        }
+
         return level;
     }
 
@@ -113,15 +118,63 @@ public class Search {
         return amountOfEffectByLevel;
     }
 
+    public Double getMineralCost()
+    {
+        Double level = Double.parseDouble(this.getLevel());
+        Double minerals = Double.parseDouble(this.getMineralCostByLevel());
+        Double mineralLvl0 = Double.parseDouble(this.getMineralCostLevel0());
+        return mineralLvl0 + ( minerals * level);
+    }
+
+    public  Double getGasCost()
+    {
+        Double level = Double.parseDouble(this.getLevel());
+        Double gas = Double.parseDouble(this.getGasCostByLevel());
+        Double gasLvl0 = Double.parseDouble(this.getGasCostLevel0());
+        return gasLvl0 + ( gas * level);
+    }
+
+    public Double getAmountEffect()
+    {
+        return Double.parseDouble(this.getAmountOfEffectLevel0()) + (Double.parseDouble(this.getAmountOfEffectByLevel()) * Double.parseDouble(this.getLevel()));
+    }
+
+    private Integer getTimeBuilding()
+    {
+        Integer timeBuildLvl0 = Integer.parseInt(this.getTimeToBuildLevel0());
+        Integer timeBuildLvl = Integer.parseInt(this.getTimeToBuildByLevel());
+        Integer level = Integer.parseInt(this.getLevel());
+        return timeBuildLvl0 + ( timeBuildLvl * level);
+    }
+
+    public Integer getTimeBuildingMin()
+    {
+        return this.getTimeBuilding() / 60;
+    }
+
+    public  Integer getTimeBuildingSec()
+    {
+        return this.getTimeBuilding() % 60;
+    }
+
+    public Boolean isBuilding()
+    {
+        if (this.getBuilding().equals("true"))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     @Override
     public String toString() {
-        Double time =  Double.parseDouble(this.getTimeToBuildLevel0()) + ( Double.parseDouble(this.getTimeToBuildByLevel()) * Double.parseDouble(this.getLevel()));
-        Integer minutes = (int) Math.floor(time / 60);
-        Integer seconds = (int) Math.floor(time % 60);
+        Integer minutes = this.getTimeBuildingMin();
+        Integer seconds = this.getTimeBuildingSec();
 
-        Double costMineral = Double.parseDouble(this.getMineralCostLevel0() + ( Double.parseDouble(this.getMineralCostByLevel()) * Double.parseDouble(this.getLevel())));
-        Double costGas = Double.parseDouble(this.getGasCostLevel0() + ( Double.parseDouble(this.getGasCostByLevel()) * Double.parseDouble(this.getLevel())));
-        Double amountEffect = Double.parseDouble(this.getAmountOfEffectLevel0() + (Double.parseDouble(this.getAmountOfEffectByLevel()) * Double.parseDouble(this.getLevel())));
+        Double costMineral = this.getMineralCost();
+        Double costGas = this.getGasCost();
+        Double amountEffect = this.getAmountEffect();
         if(this.getBuilding().equals("true")) {
             return this.getName() + " level " + this.getLevel() + "\nEn cours de construction ("+minutes.toString()+"m" + seconds.toString() + "s)\n\tCoût de la recherche :\n\t\t\t" + costMineral.toString() + " mineraux\n\t\t\t" + costGas.toString() + " gaz\n\tEffet : " + amountEffect + " " + this.getEffect();
         }else

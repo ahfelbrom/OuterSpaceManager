@@ -21,6 +21,6 @@ public class BuildingDetailsActivity extends AppCompatActivity {
         Building building = json.fromJson(jsonBuilding, Building.class);
         BuildDetailsFragment fragB = (BuildDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.fragDetails);
         fragB.fillTextView(texteAAfficher);
-        fragB.toastBuilding(building);
+        fragB.fillContent(building);
     }
 }

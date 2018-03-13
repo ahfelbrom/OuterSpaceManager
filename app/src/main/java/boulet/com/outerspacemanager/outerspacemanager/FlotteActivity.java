@@ -94,7 +94,7 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
             public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                 switch (response.code()) {
                     case 200 :
-                        Toast.makeText(getApplicationContext(), "La construction à commencé !", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "La construction à commencée !", Toast.LENGTH_LONG).show();
                         break;
                     case 401 :
                         String res = "";
