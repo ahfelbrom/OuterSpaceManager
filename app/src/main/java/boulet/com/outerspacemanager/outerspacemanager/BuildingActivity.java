@@ -11,9 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.io.IOException;
 
@@ -23,11 +27,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BuildingActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class BuildingActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
 
     private ListView listBuilding;
-
+    private Button btnMenuBat;
     private Building[] buildings;
 
     public static final String PREFS_NAME = "TOKEN_FILE";
@@ -38,15 +42,18 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_building);
 
-        listBuilding = (ListView) findViewById(R.id.listViewBuilding);
-        listBuilding.setOnItemClickListener(this);
-
-        LinearLayout rl = (LinearLayout) findViewById(R.id.bg_building);
+        listBuilding = (ListView) findViewById(R.id.lvFragList);
+        btnMenuBat = findViewById(R.id.btnMenuBat);
+        btnMenuBat.setOnClickListener(this);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
 
-        Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
+        this.loadBuildings();
+    }
+
+    private void loadBuildings() {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
         Api service = retrofit.create(Api.class);
         Call<Buildings> request = service.GetBuildings(token);
 
@@ -63,10 +70,7 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
                     }
                 }else{
                     buildings = response.body().getBuildings();
-                    //listBuilding.setAdapter(new ArrayAdapter(getApplicationContext(),  android.R.layout.simple_list_item_1, buildings));
-                    //Toast.makeText(getApplicationContext(), buildings.toString(), Toast.LENGTH_LONG).show();
-
-                    BuildingAdapter adapter = new BuildingAdapter(getApplicationContext(), buildings );
+                    ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, buildings);
                     listBuilding.setAdapter(adapter);
                 }
             }
@@ -77,68 +81,30 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
                 Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final Building building = buildings[position];
-        //Toast.makeText(getApplicationContext(), search.getName(), Toast.LENGTH_LONG).show();
+        BuildListFragment fragA = (BuildListFragment) getSupportFragmentManager().findFragmentById(R.id.fragList);
+        BuildDetailsFragment fragB = (BuildDetailsFragment)getSupportFragmentManager().findFragmentById(R.id.fragDetails);
+        if(fragB == null || !fragB.isInLayout())
+        {
+            Intent i = new Intent(getApplicationContext(), BuildingDetailsActivity.class);
+            i.putExtra("monTextAAfficher","coucou");
+            Gson json = new Gson();
+            String jsonBuilding = json.toJson(buildings[position]);
+            i.putExtra("building", jsonBuilding);
+            startActivity(i);
+        }
+        else
+        {
+            fragB.fillContent(buildings[position]);
+        }
+    }
 
-        Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
-        Api service = retrofit.create(Api.class);
-        Call<CodeResponse> request = service.CreateBuilding(token, Integer.toString(position));
-        request.enqueue(new Callback<CodeResponse>() {
-            @Override
-            public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                if(response.code() != 200){
-                    if(building.getBuilding().equals("true")) {
-                        Toast.makeText(getApplicationContext(), "La construction n'est pas terminée !", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Vous n'avez pas assez de ressources !", Toast.LENGTH_LONG).show();
-                    }
-                }else{
-                    Toast.makeText(getApplicationContext(), "La construction à commencé !", Toast.LENGTH_LONG).show();
-                    Double time =  Double.parseDouble(building.getTimeToBuildLevel0()) + ( Double.parseDouble(building.getTimeToBuildByLevel()) * Double.parseDouble(building.getLevel()));
-
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                            PendingIntent resultPendingIntent =
-                                    PendingIntent.getActivity(
-                                            getApplicationContext(),
-                                            0,
-                                            resultIntent,
-                                            PendingIntent.FLAG_UPDATE_CURRENT
-                                    );
-                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
-                                    .setContentTitle("Outer Space Manager - Construction terminée")
-                                    .setContentText("Hey ! Ton " + building.getName() + " est terminé !")
-                                    .setContentIntent(resultPendingIntent)
-                                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
-                                    .setVibrate(new long[]{1000, 1000, 0, 0, 1000, 1000})
-                                    .setShowWhen(true)
-                                    .setWhen(System.currentTimeMillis());
-
-                            // Sets an ID for the notification
-                            int mNotificationId = 001;
-                            // Gets an instance of the NotificationManager service
-                            NotificationManager mNotifyMgr =
-                                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                            // Builds the notification and issues it.
-                            mNotifyMgr.notify(mNotificationId, mBuilder.build());
-                        }
-                    }, Double.doubleToLongBits(time*1000));
-                }
-            }
-            @Override
-            public void onFailure(Call<CodeResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), call.toString(), Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
+    @Override
+    public void onClick(View v) {
+        Intent MainIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(MainIntent);
     }
 }

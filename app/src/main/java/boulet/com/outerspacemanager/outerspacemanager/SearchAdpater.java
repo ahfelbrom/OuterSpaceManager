@@ -28,9 +28,11 @@ public class SearchAdpater extends ArrayAdapter<Search> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.row_search, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.labelSearch);
+        TextView textViewName = (TextView) rowView.findViewById(R.id.labelNameSearch);
+        TextView textViewLevel = (TextView) rowView.findViewById(R.id.labelLevelSearch);
 
-        textView.setText(values[position].toString());
+        textViewName.setText(values[position].getName());
+        textViewLevel.setText("Level " + values[position].getLevel());
 
         return rowView;
     }

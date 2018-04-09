@@ -9,16 +9,32 @@
     android:orientation="vertical">
 
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:text="@string/building" />
+        android:layout_height="wrap_content">
 
-    <ListView
+        <Button
+            android:id="@+id/btnMenuBat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/menu" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:text="@string/building" />
+    </LinearLayout>
+
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:name="boulet.com.outerspacemanager.outerspacemanager.BuildListFragment"
+        android:id="@+id/fragList" />
+
+    <!-- <ListView
         android:id="@+id/listViewBuilding"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent" /> -->
 </LinearLayout>

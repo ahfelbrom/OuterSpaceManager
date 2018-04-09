@@ -20,10 +20,12 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".GalaxyActivity" />
         <activity android:name=".BuildingActivity" />
+        <activity android:name=".BuildingDetailsActivity" />
         <activity android:name=".GeneralActivity" />
         <activity android:name=".FlotteActivity" />
         <activity android:name=".VaisseauActivity" />
         <activity android:name=".SearchActivity" />
+        <activity android:name=".SearchDetailsActivity" />
         <activity android:name=".ChantierActivity" />
     </application>
 

@@ -49,6 +49,7 @@ class DownLoadImageTask extends AsyncTask<String,Void,Bitmap> {
     public DownLoadImageTask(ImageView imageView){
         this.imageView = imageView;
     }
+
     protected Bitmap doInBackground(String...urls){
         String urlOfImage = urls[0];
         Bitmap logo = null;
@@ -60,6 +61,7 @@ class DownLoadImageTask extends AsyncTask<String,Void,Bitmap> {
         }
         return logo;
     }
+
     /*
         onPostExecute(Result result)
             Runs on the UI thread after doInBackground(Params...).
