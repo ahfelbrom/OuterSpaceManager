@@ -67,4 +67,8 @@ public interface Api {
     // CreateBuilding
     @POST("/api/v1/buildings/create/{buildingId}")
     Call<CodeResponse> CreateBuilding(@Header("x-access-token") String token, @Path("buildingId") String buildingId);
+
+    // get reports
+    @GET("/api/v1/reports/{from}/{limit}")
+    Call<Reports> GetReports(@Header("x-access-token") String token, @Path("from") Integer from, @Path("limit") Integer limit);
 }
