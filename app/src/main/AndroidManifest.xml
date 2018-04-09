@@ -25,6 +25,7 @@
         <activity android:name=".FlotteActivity" />
         <activity android:name=".VaisseauActivity" />
         <activity android:name=".SearchActivity" />
+        <activity android:name=".SearchDetailsActivity" />
         <activity android:name=".ChantierActivity" />
     </application>
 

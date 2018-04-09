@@ -11,8 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.io.IOException;
 
@@ -22,10 +25,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SearchActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class SearchActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     private ListView listSearch;
-
+    private Button btnReturnMenu;
     private Search[] searches;
 
     public static final String PREFS_NAME = "TOKEN_FILE";
@@ -39,6 +42,8 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         listSearch = (ListView) findViewById(R.id.listViewSearch);
         listSearch.setOnItemClickListener(this);
 
+        btnReturnMenu = findViewById(R.id.btnReturnMenu);
+        btnReturnMenu.setOnClickListener(this);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
 
@@ -78,62 +83,26 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final Search search = searches[position];
-        //Toast.makeText(getApplicationContext(), search.getName(), Toast.LENGTH_LONG).show();
+        SearchListFragment fragA = (SearchListFragment) getSupportFragmentManager().findFragmentById(R.id.fragSearchList);
+        SearchDetailsFragment fragB = (SearchDetailsFragment)getSupportFragmentManager().findFragmentById(R.id.fragSearchDetails);
+        if(fragB == null || !fragB.isInLayout())
+        {
+            Intent i = new Intent(getApplicationContext(), SearchDetailsActivity.class);
+            Gson json = new Gson();
+            String jsonSearch = json.toJson(searches[position]);
+            i.putExtra("search", jsonSearch);
+            i.putExtra("index", position);
+            startActivity(i);
+        }
+        else
+        {
+            fragB.fillContent(searches[position], position);
+        }
+    }
 
-        Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
-        Api service = retrofit.create(Api.class);
-        Call<CodeResponse> request = service.StartSearchesForUser(token, Integer.toString(position));
-
-        request.enqueue(new Callback<CodeResponse>() {
-            @Override
-            public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                if(response.code() != 200){
-                    if(search.getBuilding().equals("true"))
-                        Toast.makeText(getApplicationContext(), "La recherche n'est pas terminée !", Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(getApplicationContext(), "Vous n'avez pas assez de ressources !", Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(getApplicationContext(), "La recherche à commencé !", Toast.LENGTH_LONG).show();
-
-                    Double time =  Double.parseDouble(search.getTimeToBuildLevel0()) + ( Double.parseDouble(search.getTimeToBuildByLevel()) * Double.parseDouble(search.getLevel()));
-
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                            PendingIntent resultPendingIntent =
-                                    PendingIntent.getActivity(
-                                            getApplicationContext(),
-                                            0,
-                                            resultIntent,
-                                            PendingIntent.FLAG_UPDATE_CURRENT
-                                    );
-                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
-                                    .setContentTitle("Outer Space Manager - Recherche terminée")
-                                    .setContentText("Hey ! Ta " + search.getName() + " est terminé !")
-                                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
-                                    .setVibrate(new long[] { 1000, 1000, 0, 0, 1000, 1000})
-                                    .setContentIntent(resultPendingIntent)
-                                    .setShowWhen(true)
-                                    .setWhen(System.currentTimeMillis());
-                            // Sets an ID for the notification
-                            int mNotificationId = 002;
-                            // Gets an instance of the NotificationManager service
-                            NotificationManager mNotifyMgr =
-                                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                            // Builds the notification and issues it.
-                            mNotifyMgr.notify(mNotificationId, mBuilder.build());
-                        }
-                    }, Double.doubleToLongBits(time * 1000));
-                }
-            }
-            @Override
-            public void onFailure(Call<CodeResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), call.toString(), Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
+    @Override
+    public void onClick(View v) {
+        Intent MainIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(MainIntent);
     }
 }

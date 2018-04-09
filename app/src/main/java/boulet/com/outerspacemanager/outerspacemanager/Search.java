@@ -175,9 +175,9 @@ public class Search {
         Double costMineral = this.getMineralCost();
         Double costGas = this.getGasCost();
         Double amountEffect = this.getAmountEffect();
-        if(this.getBuilding().equals("true")) {
+        if(this.isBuilding()) {
             return this.getName() + " level " + this.getLevel() + "\nEn cours de construction ("+minutes.toString()+"m" + seconds.toString() + "s)\n\tCoût de la recherche :\n\t\t\t" + costMineral.toString() + " mineraux\n\t\t\t" + costGas.toString() + " gaz\n\tEffet : " + amountEffect + " " + this.getEffect();
         }else
-            return this.getName() + " level " + this.getLevel() + "\n\tCoût de la recherche :\n\t\t\t" + costMineral.toString() + " mineraux\n\t\t\t" + costGas.toString() + " gaz\n\tEffet : " + amountEffect + " " + this.getEffect();
+            return this.getName() + " level " + this.getLevel() + "\n\tCoût de la recherche :\n\t\t\t" + costMineral.toString() + " mineraux\n\t\t\t" + costGas.toString() + " gaz\n\tEffet : " + amountEffect + " " + this.getEffect()+"\nTemps de construction : " + minutes.toString()+"m" + seconds.toString() + "s";
     }
 }
