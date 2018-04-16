@@ -53,7 +53,7 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
     }
 
     private void loadBuildings() {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://outer-space-manager-staging.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
         Api service = retrofit.create(Api.class);
         Call<Buildings> request = service.GetBuildings(token);
 
@@ -99,6 +99,7 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
         else
         {
             fragB.fillContent(buildings[position]);
+            fragB.updateProgressBar();
         }
     }
 

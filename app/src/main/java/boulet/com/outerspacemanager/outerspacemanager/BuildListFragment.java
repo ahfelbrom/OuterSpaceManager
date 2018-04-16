@@ -15,7 +15,6 @@ import android.widget.ListView;
 
 public class BuildListFragment extends Fragment {
     private ListView lvFragList;
-    public String[] listItems = {"item 1", "item 2 ", "list", "android", "item 3", "foobar", "bar" };
 
 
     @Override

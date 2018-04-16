@@ -60,9 +60,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         if (v.getId() == btnValider.getId())
         {
-            Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
+            Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager-staging.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
             Api service = retrofit.create(Api.class);
-            Toast.makeText(getApplicationContext(), "Connection...", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Connexion...", Toast.LENGTH_LONG).show();
             Call<AuthResponse> request = service.Connection(new User(inputUsername.getText().toString(), inputPassword.getText().toString(), ""));
             request.enqueue(new Callback<AuthResponse>() {
                 @Override

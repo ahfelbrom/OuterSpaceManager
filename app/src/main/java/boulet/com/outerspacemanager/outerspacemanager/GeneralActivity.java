@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,6 +23,7 @@ public class GeneralActivity extends AppCompatActivity implements View.OnClickLi
     private TextView txtInfos;
     private Button btnMenuGeneral;
     public static final String PREFS_NAME = "TOKEN_FILE";
+    private Timer timer;
     private String token;
 
     @Override
@@ -32,33 +36,51 @@ public class GeneralActivity extends AppCompatActivity implements View.OnClickLi
         btnMenuGeneral.setOnClickListener(this);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
-
-        Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
-        Api service = retrofit.create(Api.class);
-        Call<UserResponse> request = service.GetUserInfo(token);
-
-        request.enqueue(new Callback<UserResponse>() {
+        timer = new Timer();
+        Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager-staging.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
+        final Api service = retrofit.create(Api.class);
+        timer.scheduleAtFixedRate(new TimerTask(){
             @Override
-            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                if(response.code() != 200){
-                    Toast.makeText(getApplicationContext(), "Une erreur est survenue !", Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    UserResponse user = response.body();
-                    String toDisplay = user.getUsername() + " (" + user.getPoints() + " points)\n";
-                    toDisplay += "Gaz : " + Math.round(Double.parseDouble(user.getGas())) + "\n";
-                    toDisplay += "Mineraux : " + Math.round(Double.parseDouble(user.getMinerals())) + "\n";
-                    txtInfos.setText(toDisplay);
-                }
-            }
+            public void run(){
+                Call<UserResponse> request = service.GetUserInfo(token);
 
-            @Override
-            public void onFailure(Call<UserResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), call.toString(), Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
+                request.enqueue(new Callback<UserResponse>() {
+                    @Override
+                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                        if(response.code() != 200){
+                            Toast.makeText(getApplicationContext(), "Une erreur est survenue !", Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            UserResponse user = response.body();
+                            String toDisplay = user.getUsername() + " (" + user.getPoints() + " points)\n";
+                            toDisplay += "Gaz : " + Math.round(Double.parseDouble(user.getGas())) + "\n";
+                            toDisplay += "Mineraux : " + Math.round(Double.parseDouble(user.getMinerals())) + "\n";
+                            txtInfos.setText(toDisplay);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserResponse> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), call.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }},0,1000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timer.cancel();
+        timer.purge();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        timer.cancel();
+        timer.purge();
     }
 
     @Override

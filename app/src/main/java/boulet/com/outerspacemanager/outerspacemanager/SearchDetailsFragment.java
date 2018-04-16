@@ -92,7 +92,7 @@ public class SearchDetailsFragment extends Fragment implements View.OnClickListe
         final Search search = this.search;
         //Toast.makeText(getApplicationContext(), search.getName(), Toast.LENGTH_LONG).show();
 
-        Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
+        Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager-staging.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
         Api service = retrofit.create(Api.class);
         Call<CodeResponse> request = service.StartSearchesForUser(token, Integer.toString(this.index));
 
