@@ -21,6 +21,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class GeneralActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView txtInfos;
+    private TextView tvGasShow;
+    private TextView tvMineralShow;
     private Button btnMenuGeneral;
     public static final String PREFS_NAME = "TOKEN_FILE";
     private Timer timer;
@@ -32,6 +34,8 @@ public class GeneralActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_general);
 
         txtInfos = (TextView) findViewById(R.id.txtInfos);
+        tvGasShow = findViewById(R.id.tvGasShow);
+        tvMineralShow = findViewById(R.id.tvMineralShow);
         btnMenuGeneral = findViewById(R.id.btnMenuGeneral);
         btnMenuGeneral.setOnClickListener(this);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -54,8 +58,8 @@ public class GeneralActivity extends AppCompatActivity implements View.OnClickLi
                         {
                             UserResponse user = response.body();
                             String toDisplay = user.getUsername() + " (" + user.getPoints() + " points)\n";
-                            toDisplay += "Gaz : " + Math.round(Double.parseDouble(user.getGas())) + "\n";
-                            toDisplay += "Mineraux : " + Math.round(Double.parseDouble(user.getMinerals())) + "\n";
+                            tvGasShow.setText(Math.round(Double.parseDouble(user.getGas()))+"");
+                            tvMineralShow.setText(Math.round(Double.parseDouble(user.getMinerals()))+"");
                             txtInfos.setText(toDisplay);
                         }
                     }

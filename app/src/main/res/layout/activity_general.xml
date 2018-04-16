@@ -33,8 +33,70 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20sp"
+        android:background="@color/darkGrey"
         android:id="@+id/txtInfos"
         android:textAlignment="center"
         android:text="" />
+
+    <TextView
+        android:id="@+id/tvResourceInfos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:background="@color/grey"
+        android:text="@string/resourceInfos" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvGas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/grey"
+            android:text="@string/gasInfo"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/tvMineral"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/grey"
+            android:text="@string/mineralInfos"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvGasShow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_weight="1"
+            android:background="@color/lightGrey"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvMineralShow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/lightGrey"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+    </LinearLayout>
 
 </LinearLayout>

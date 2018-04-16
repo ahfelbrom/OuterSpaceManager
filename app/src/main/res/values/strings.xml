@@ -13,8 +13,8 @@
     <string name="build_image_description">The image of the building</string>
     <string name="build">Construire</string>
     <string name="cost">Coût :</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search">Rechercher</string>
+    <string name="gasInfo">Gaz :</string>
+    <string name="mineralInfos">Minerais :</string>
+    <string name="resourceInfos">RESSOURCES</string>
 </resources>
