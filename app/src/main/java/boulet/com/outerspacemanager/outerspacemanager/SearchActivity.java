@@ -64,10 +64,6 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                     }
                 }else{
                     searches = response.body().getSearches();
-                    //Toast.makeText(getApplicationContext(), buildings.toString(), Toast.LENGTH_LONG).show();
-
-                    //listSearch.setAdapter(new ArrayAdapter(getApplicationContext(),  android.R.layout.simple_list_item_1, searches));
-
                     SearchAdpater adapter = new SearchAdpater(getApplicationContext(), searches );
                     listSearch.setAdapter(adapter);
                 }

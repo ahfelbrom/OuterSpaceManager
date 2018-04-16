@@ -29,4 +29,7 @@
     <string name="numberDeathStar">Nombre d\'étoile de la mort</string>
     <string name="cancel">Annuler</string>
     <string name="attack">Attaquer</string>
+    <string name="speed_fleet">Vitesse de la flotte</string>
+    <string name="speed_building">Vitesse de construction</string>
+    <string name="mineral_modifier">vitesse de minage</string>
 </resources>

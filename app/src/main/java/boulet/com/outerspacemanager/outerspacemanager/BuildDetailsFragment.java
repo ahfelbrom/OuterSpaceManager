@@ -73,13 +73,7 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
         btnBuild.setOnClickListener(this);
         settings = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
-        // utile pour exécuter du code sur le thread principal
-        /*getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //Your code to run in GUI thread here
-            }
-        });*/
+
 
         return v;
     }
@@ -109,7 +103,7 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
         tvMineralCost.setText(building.getMineralCost().toString() + " minéraux");
         tvGasCost.setText(building.getGasCost().toString() + " gaz");
         tvAmountOfEffect.setText("Bonus : +" + building.getAmountEffect() + " ");
-        tvEffect.setText(building.getEffect());
+        tvEffect.setText(getResources().getString( getResources().getIdentifier(building.getEffect(), "string", getActivity().getPackageName())));
         if (building.isBuilding())
         {
             tvTimeToBuild.append(" (en construction)");
@@ -129,15 +123,37 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
     {
         pbPercentBuild.setMax(this.building.getTimeBuilding());
         Long timeNow = new Date().getTime() / 1000;
-        Long difference = timeNow - timeStartBuilding;
+        final Long difference = timeNow - timeStartBuilding;
         Double percent = Double.parseDouble(difference + "") / Double.parseDouble(this.building.getTimeBuilding() + "");
         if (percent < 1) {
-            pbPercentBuild.setProgress(Integer.parseInt(difference + ""));
-            pbPercentBuild.setVisibility(View.VISIBLE);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pbPercentBuild.setProgress(Integer.parseInt(difference + ""));
+                    tvTimeToBuild.setText("Temps restant : " + (building.getTimeBuilding() - difference)/60 + ":" + (building.getTimeBuilding() - difference)%60 + " minutes");
+                    pbPercentBuild.setVisibility(View.VISIBLE);
+                }
+            });
 
         } else {
-            pbPercentBuild.setVisibility(View.INVISIBLE);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    BuildDetailsFragment.this.refreshBuild();
+                    BuildDetailsFragment.this.fillContent(BuildDetailsFragment.this.building);
+                    pbPercentBuild.setVisibility(View.INVISIBLE);
+                    btnBuild.setText("Construire");
+                    btnBuild.setEnabled(true);
+                }
+            });
+
         }
+    }
+
+    private void refreshBuild()
+    {
+        this.building.setLevel((Integer.parseInt(this.building.getLevel())+1)+"");
+        this.building.setBuilding(false+"");
     }
 
     @Override
