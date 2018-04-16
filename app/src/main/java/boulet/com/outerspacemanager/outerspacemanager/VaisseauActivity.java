@@ -86,7 +86,7 @@ public class VaisseauActivity extends AppCompatActivity implements AdapterView.O
         Ship ship = flotte[position];
         ship.setAmount("1");
 
-        Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
+        Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager-staging.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
         Api service = retrofit.create(Api.class);
         Call<CodeResponse> request = service.CreateShips(token, ship, ship.getShipId());
         request.enqueue(new Callback<CodeResponse>() {

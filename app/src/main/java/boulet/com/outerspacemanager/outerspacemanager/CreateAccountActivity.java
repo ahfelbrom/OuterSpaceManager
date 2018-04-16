@@ -35,8 +35,6 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         inputPassword = (EditText) findViewById(R.id.inputPassword);
         inputEmail = (EditText) findViewById(R.id.inputEmail);
 
-        LinearLayout rl = (LinearLayout) findViewById(R.id.bg_create);
-
         btnValider.setOnClickListener(this);
         btnConnect.setOnClickListener(this);
     }
@@ -45,7 +43,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         if (v.getId() == btnValider.getId())
         {
-            Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
+            Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager-staging.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
             Api service = retrofit.create(Api.class);
             Call<AuthResponse> request = service.CreateAccount(new User(inputUsername.getText().toString(), inputPassword.getText().toString(), inputEmail.getText().toString()));
             request.enqueue(new Callback<AuthResponse>() {

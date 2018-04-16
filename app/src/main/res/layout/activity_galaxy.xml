@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/bg_galaxy"
+    android:background="@drawable/pretty_image"
     tools:context="boulet.com.outerspacemanager.outerspacemanager.GalaxyActivity">
 
     <LinearLayout

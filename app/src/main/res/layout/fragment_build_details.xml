@@ -75,4 +75,14 @@
         android:layout_gravity="center"
         android:text="@string/build"
         android:id="@+id/btnBuild"/>
+
+    <ProgressBar
+        android:id="@+id/pbPercentBuild"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"/>
+
+
 </LinearLayout>

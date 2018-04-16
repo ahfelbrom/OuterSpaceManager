@@ -159,7 +159,7 @@ public class Building {
         return Double.parseDouble(this.getAmountOfEffectLevel0()) + (Double.parseDouble(this.getAmountOfEffectByLevel()) * Double.parseDouble(this.getLevel()));
     }
 
-    private Integer getTimeBuilding()
+    public Integer getTimeBuilding()
     {
         Integer timeBuildLvl0 = Integer.parseInt(this.getTimeToBuildLevel0());
         Integer timeBuildLvl = Integer.parseInt(this.getTimeToBuildByLevel());

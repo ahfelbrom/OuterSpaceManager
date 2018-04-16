@@ -5,8 +5,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by aboulet on 05/03/2018.
@@ -28,9 +33,18 @@ public class BuildingDetailsActivity extends AppCompatActivity implements View.O
         String jsonBuilding = getIntent().getStringExtra("building");
         Gson json = new Gson();
         Building building = json.fromJson(jsonBuilding, Building.class);
-        BuildDetailsFragment fragB = (BuildDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.fragDetails);
+        final BuildDetailsFragment fragB = (BuildDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.fragDetails);
         fragB.fillTextView(texteAAfficher);
         fragB.fillContent(building);
+        if (building.isBuilding())
+        {
+            new Timer().scheduleAtFixedRate(new TimerTask(){
+                @Override
+                public void run(){
+                    fragB.updateProgressBar();
+                }},0,5000);
+        }
+
     }
 
     @Override

@@ -7,9 +7,17 @@
     android:layout_width="match_parent"
     android:id="@+id/bg_login"
     android:layout_height="match_parent"
-
+    android:background="@drawable/pretty_image"
+    android:scaleType = "centerCrop"
+    android:adjustViewBounds="true"
     android:orientation="vertical"
     tools:context="boulet.com.outerspacemanager.outerspacemanager.SignUpActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/logo"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,6 +43,7 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:ems="10"
+            android:textColor="@color/black"
             android:inputType="textPersonName"/>
     </LinearLayout>
 
@@ -64,6 +73,7 @@
             android:layout_marginTop="8dp"
             android:layout_weight="2"
             android:ems="10"
+            android:textColor="@color/black"
             android:inputType="textPassword"/>
     </LinearLayout>
 
