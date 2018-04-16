@@ -1,7 +1,9 @@
 package boulet.com.outerspacemanager.outerspacemanager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.io.IOException;
 
@@ -57,9 +61,8 @@ public class GalaxyActivity extends AppCompatActivity implements View.OnClickLis
                         e.printStackTrace();
                     }
                 }else{
-                    //Toast.makeText(getApplicationContext(), "Connection...", Toast.LENGTH_LONG).show();
                     listUsers = response.body().getUsers();
-                    //viewUsers.setAdapter(new ArrayAdapter(getApplicationContext(),  android.R.layout.simple_list_item_1, listUsers));
+
 
                     UserAdapter adapter = new UserAdapter(getApplicationContext(), listUsers );
                     viewUsers.setAdapter(adapter);
@@ -82,6 +85,32 @@ public class GalaxyActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final UserResponse userToAttack = listUsers[position];
+        AlertDialog.Builder builder = new AlertDialog.Builder(GalaxyActivity.this);
+        builder.setMessage("Voulez-vous attaquer " + listUsers[position].getUsername() + " ?");
+        builder.setCancelable(true);
+        builder.setPositiveButton(
+                "Oui",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        Intent myIntent = new Intent(getApplicationContext(), AttackActivity.class);
+                        Gson json = new Gson();
+                        String jsonString = json.toJson(userToAttack);
+                        myIntent.putExtra("USER_TO_ATTACK", jsonString);
+                        startActivity(myIntent);
+                    }
+                });
 
+        builder.setNegativeButton(
+                "Non",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

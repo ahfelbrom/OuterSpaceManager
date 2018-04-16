@@ -3,7 +3,9 @@ package boulet.com.outerspacemanager.outerspacemanager;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ChantierActivity extends AppCompatActivity {
 
     private TextView txtChantier;
-
+    private ListView lvReports;
     public static final String PREFS_NAME = "TOKEN_FILE";
     private String token;
 
@@ -29,7 +31,7 @@ public class ChantierActivity extends AppCompatActivity {
       
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
-
+        lvReports = findViewById(R.id.lvReports);
         Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager-staging.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
         Api service = retrofit.create(Api.class);
         Call<Reports> request = service.GetReports(token, 0, 20);
@@ -48,6 +50,7 @@ public class ChantierActivity extends AppCompatActivity {
                     for (Report report:reports.getReports()) {
                         Toast.makeText(getApplicationContext(), report.toString(), Toast.LENGTH_SHORT).show();
                     }
+                    lvReports.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, reports.getReports()));
                 }
             }
             @Override

@@ -17,4 +17,16 @@
     <string name="gasInfo">Gaz :</string>
     <string name="mineralInfos">Minerais :</string>
     <string name="resourceInfos">RESSOURCES</string>
+    <string name="lightShip">Chasseur léger</string>
+    <string name="numBerLightShip">Nombre de chasseur léger</string>
+    <string name="heavyShip">Chasseur lourd</string>
+    <string name="numberHeavyShip">Nombre de chasseur lourd</string>
+    <string name="spyShip">Sonde d\'espionage</string>
+    <string name="numberSpyShip">Nombre de sonde d\'espionnage</string>
+    <string name="destroyer">Destroyer</string>
+    <string name="numberDestroyer">Nombre de Destroyer</string>
+    <string name="deathStar">Étoile de la mort</string>
+    <string name="numberDeathStar">Nombre d\'étoile de la mort</string>
+    <string name="cancel">Annuler</string>
+    <string name="attack">Attaquer</string>
 </resources>
