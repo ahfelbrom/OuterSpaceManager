@@ -85,11 +85,6 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
         return v;
     }
 
-    public void fillTextView(String text)
-    {
-        tvNameBuilding.setText(text);
-    }
-
     public void fillContent(Building building)
     {
         this.building = building;
@@ -232,6 +227,7 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
                         break;
                     case 500 :
                         Toast.makeText(getContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
+                        break;
                 }
             }
             @Override

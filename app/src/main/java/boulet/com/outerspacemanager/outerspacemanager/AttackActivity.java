@@ -118,6 +118,7 @@ public class AttackActivity extends AppCompatActivity implements View.OnClickLis
                             break;
                         case 500 :
                             Toast.makeText(getApplicationContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
+                            break;
                     }
                 }
 

@@ -1,5 +1,6 @@
 package boulet.com.outerspacemanager.outerspacemanager;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,7 +10,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,16 +42,27 @@ public class ChantierActivity extends AppCompatActivity {
         request.enqueue(new Callback<Reports>() {
             @Override
             public void onResponse(Call<Reports> call, Response<Reports> response) {
-                if(response.code() != 200){
-                    Toast.makeText(getApplicationContext(), "Pas bien passé !!!", Toast.LENGTH_LONG).show();
+                switch (response.code())
+                {
+                    case 200:
+                        Reports reports = response.body();
+                        lvReports.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, reports.getReports()));
+                        break;
+                    case 401 :
+                        String res = "";
                         try {
-                            Toast.makeText(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_LONG).show();
-                        } catch (IOException e) {
+                            res = response.errorBody().string();
+                        } catch (IOException e)
+                        {
                             e.printStackTrace();
                         }
-                }else{
-                    Reports reports = response.body();
-                    lvReports.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, reports.getReports()));
+                        Gson gson = new Gson();
+                        ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
+                        Toast.makeText(getApplicationContext(), er.getMessage(), Toast.LENGTH_SHORT).show();
+                        break;
+                    case 500 :
+                        Toast.makeText(getApplicationContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
+                        break;
                 }
             }
             @Override

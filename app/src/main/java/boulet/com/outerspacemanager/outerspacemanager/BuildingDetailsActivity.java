@@ -29,12 +29,10 @@ public class BuildingDetailsActivity extends AppCompatActivity implements View.O
         btnRetourBuilding = findViewById(R.id.btnRetourBuilding);
         btnRetourBuilding.setOnClickListener(this);
 
-        String texteAAfficher = getIntent().getStringExtra("monTextAAfficher");
         String jsonBuilding = getIntent().getStringExtra("building");
         Gson json = new Gson();
         Building building = json.fromJson(jsonBuilding, Building.class);
         final BuildDetailsFragment fragB = (BuildDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.fragDetails);
-        fragB.fillTextView(texteAAfficher);
         fragB.fillContent(building);
         if (building.isBuilding())
         {

@@ -98,6 +98,7 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
                         break;
                     case 500 :
                         Toast.makeText(getApplicationContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
+                        break;
                 }
             }
 

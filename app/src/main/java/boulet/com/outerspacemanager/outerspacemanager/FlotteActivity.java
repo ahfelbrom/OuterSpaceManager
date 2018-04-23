@@ -107,6 +107,12 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
                         Gson gson = new Gson();
                         ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
                         Toast.makeText(getApplicationContext(), er.getMessage(), Toast.LENGTH_LONG).show();
+                        break;
+                    case 404 :
+                        Toast.makeText(getApplicationContext(), "N'essaie pas de casser mon code pls :'(", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 500 :
+                        Toast.makeText(getApplicationContext(), "Erreur interne à l'API. Réessayez plus tard...", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
