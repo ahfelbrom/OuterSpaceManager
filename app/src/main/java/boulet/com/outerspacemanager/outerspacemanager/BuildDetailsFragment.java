@@ -103,12 +103,18 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
         tvMineralCost.setText(building.getMineralCost().toString() + " minéraux");
         tvGasCost.setText(building.getGasCost().toString() + " gaz");
         tvAmountOfEffect.setText("Bonus : +" + building.getAmountEffect() + " ");
-        tvEffect.setText(getResources().getString( getResources().getIdentifier(building.getEffect(), "string", getActivity().getPackageName())));
+        if (building.getEffect() != null && building.getEffect() != "") {
+            String resource = getResources().getString( getResources().getIdentifier(building.getEffect(), "string", getActivity().getPackageName()));
+            tvEffect.setText(resource);
+        } else {
+            tvEffect.setText("Ressources");
+        }
         if (building.isBuilding())
         {
             tvTimeToBuild.append(" (en construction)");
             btnBuild.setText("En construction");
             btnBuild.setEnabled(false);
+            this.updateProgressBar();
         }
         else
         {
@@ -121,32 +127,43 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
 
     public void updateProgressBar()
     {
-        pbPercentBuild.setMax(this.building.getTimeBuilding());
-        Long timeNow = new Date().getTime() / 1000;
-        final Long difference = timeNow - timeStartBuilding;
-        Double percent = Double.parseDouble(difference + "") / Double.parseDouble(this.building.getTimeBuilding() + "");
-        if (percent < 1) {
-            getActivity().runOnUiThread(new Runnable() {
+        if (this.building.isBuilding())
+        {
+            final Timer time = new Timer();
+            time.scheduleAtFixedRate(new TimerTask(){
                 @Override
                 public void run() {
-                    pbPercentBuild.setProgress(Integer.parseInt(difference + ""));
-                    tvTimeToBuild.setText("Temps restant : " + (building.getTimeBuilding() - difference)/60 + ":" + (building.getTimeBuilding() - difference)%60 + " minutes");
-                    pbPercentBuild.setVisibility(View.VISIBLE);
-                }
-            });
+                    pbPercentBuild.setMax(BuildDetailsFragment.this.building.getTimeBuilding());
+                    Long timeNow = new Date().getTime() / 1000;
+                    final Long difference = timeNow - timeStartBuilding;
+                    Double percent = Double.parseDouble(difference + "") / Double.parseDouble(BuildDetailsFragment.this.building.getTimeBuilding() + "");
+                    if (percent < 1) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                pbPercentBuild.setProgress(Integer.parseInt(difference + ""));
+                                tvTimeToBuild.setText("Temps restant : " + (building.getTimeBuilding() - difference)/60 + ":" + (building.getTimeBuilding() - difference)%60 + " minutes");
+                                pbPercentBuild.setVisibility(View.VISIBLE);
+                            }
+                        });
 
-        } else {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    BuildDetailsFragment.this.refreshBuild();
-                    BuildDetailsFragment.this.fillContent(BuildDetailsFragment.this.building);
-                    pbPercentBuild.setVisibility(View.INVISIBLE);
-                    btnBuild.setText("Construire");
-                    btnBuild.setEnabled(true);
-                }
-            });
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                BuildDetailsFragment.this.refreshBuild();
+                                BuildDetailsFragment.this.fillContent(BuildDetailsFragment.this.building);
+                                pbPercentBuild.setVisibility(View.INVISIBLE);
+                                btnBuild.setText("Construire");
+                                btnBuild.setEnabled(true);
+                                time.cancel();
+                                time.purge();
+                            }
+                        });
 
+                    }
+                }
+            },0,1000);
         }
     }
 

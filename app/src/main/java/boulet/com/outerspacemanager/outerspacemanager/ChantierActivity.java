@@ -47,9 +47,6 @@ public class ChantierActivity extends AppCompatActivity {
                         }
                 }else{
                     Reports reports = response.body();
-                    for (Report report:reports.getReports()) {
-                        Toast.makeText(getApplicationContext(), report.toString(), Toast.LENGTH_SHORT).show();
-                    }
                     lvReports.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, reports.getReports()));
                 }
             }
