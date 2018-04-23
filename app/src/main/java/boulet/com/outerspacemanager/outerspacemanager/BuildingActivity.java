@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +34,7 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
     private ListView listBuilding;
     private Button btnMenuBat;
     private Building[] buildings;
-
+    private SharedPreferences settings;
     public static final String PREFS_NAME = "TOKEN_FILE";
     private String token;
 
@@ -46,7 +47,7 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
         btnMenuBat = findViewById(R.id.btnMenuBat);
         btnMenuBat.setOnClickListener(this);
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
 
         this.loadBuildings();
@@ -69,9 +70,34 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
                         e.printStackTrace();
                     }
                 }else{
-                    buildings = response.body().getBuildings();
-                    ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, buildings);
-                    listBuilding.setAdapter(adapter);
+                }
+                switch (response.code())
+                {
+                    case 200:
+                        buildings = response.body().getBuildings();
+                        ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, buildings);
+                        listBuilding.setAdapter(adapter);
+                        break;
+                    case 401 :
+                        String res = "";
+                        try {
+                            res = response.errorBody().string();
+                        } catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        Gson gson = new Gson();
+                        ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
+                        Toast.makeText(getApplicationContext(), er.getMessage(), Toast.LENGTH_SHORT).show();
+                        break;
+                    case 403 :
+                        Toast.makeText(getApplicationContext(), "Veuillez vous réauthentifier s'il vous plait", Toast.LENGTH_LONG).show();
+                        settings.edit().remove("token").apply();
+                        Intent myIntent = new Intent(getApplicationContext(), SignUpActivity.class);
+                        startActivity(myIntent);
+                        break;
+                    case 500 :
+                        Toast.makeText(getApplicationContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
                 }
             }
 

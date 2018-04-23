@@ -2,7 +2,7 @@
     <string name="app_name">Outer Space Manager</string>
     <string name="disconnect">Déconnexion</string>
     <string name="galaxy">Galaxie</string>
-    <string name="chantier">Chantier Spacial</string>
+    <string name="chantier">Chantier Spatial</string>
     <string name="research">recherches</string>
     <string name="flotte">Flotte</string>
     <string name="building">Bâtiments</string>
@@ -31,5 +31,5 @@
     <string name="attack">Attaquer</string>
     <string name="speed_fleet">Vitesse de la flotte</string>
     <string name="speed_building">Vitesse de construction</string>
-    <string name="mineral_modifier">vitesse de minage</string>
+    <string name="mineral_modifier">Vitesse de minage</string>
 </resources>

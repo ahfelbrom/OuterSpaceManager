@@ -92,18 +92,32 @@ public class AttackActivity extends AppCompatActivity implements View.OnClickLis
             request.enqueue(new Callback<CodeResponse>() {
                 @Override
                 public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                    if(response.code() != 200){
-                        try {
-                            Toast.makeText(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_LONG).show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }else{
-                        Toast.makeText(getApplicationContext(), "L'attaque à été lancée !", Toast.LENGTH_LONG).show();
-                        Date attackDate = new Date(Long.parseLong(response.body().getAttackTime()));
-                        Toast.makeText(getApplicationContext(), attackDate.toString(), Toast.LENGTH_SHORT).show();
-                        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(myIntent);
+                    switch (response.code())
+                    {
+                        case 200:
+                            Toast.makeText(getApplicationContext(), "L'attaque à été lancée !", Toast.LENGTH_LONG).show();
+                            Date attackDate = new Date(Long.parseLong(response.body().getAttackTime()));
+                            Toast.makeText(getApplicationContext(), attackDate.toString(), Toast.LENGTH_SHORT).show();
+                            Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(myIntent);
+                            break;
+                        case 401 :
+                            String res = "";
+                            try {
+                                res = response.errorBody().string();
+                            } catch (IOException e)
+                            {
+                                e.printStackTrace();
+                            }
+                            Gson gson = new Gson();
+                            ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
+                            Toast.makeText(getApplicationContext(), er.getMessage(), Toast.LENGTH_SHORT).show();
+                            break;
+                        case 404 :
+                            Toast.makeText(getApplicationContext(), "Comment as tu fait pour changer mes valeurs ? Oo", Toast.LENGTH_LONG).show();
+                            break;
+                        case 500 :
+                            Toast.makeText(getApplicationContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
                     }
                 }
 

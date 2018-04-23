@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -54,6 +58,8 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
     private Building building;
     private Long timeStartBuilding;
     private SharedPreferences settings;
+    private Timer time;
+    private boolean canceled = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -74,6 +80,7 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
         settings = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
 
+        time = new Timer();
 
         return v;
     }
@@ -87,13 +94,6 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
     {
         this.building = building;
         timeStartBuilding = settings.getLong("timeStartConstruction"+building.getName(), 0);
-        if (timeStartBuilding != 0)
-        {
-            if (!building.isBuilding())
-            {
-                settings.edit().remove("timeStartConstruction"+building.getName()).apply();
-            }
-        }
 
         DownLoadImageTask dl = new DownLoadImageTask(ivBuildingDetails);
         dl.execute(building.getImageUrl());
@@ -114,7 +114,9 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
             tvTimeToBuild.append(" (en construction)");
             btnBuild.setText("En construction");
             btnBuild.setEnabled(false);
-            this.updateProgressBar();
+            if (timeStartBuilding != 0) {
+                this.updateProgressBar();
+            }
         }
         else
         {
@@ -129,47 +131,62 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
     {
         if (this.building.isBuilding())
         {
-            final Timer time = new Timer();
+            if (canceled) {
+                time = new Timer();
+            }
             time.scheduleAtFixedRate(new TimerTask(){
                 @Override
                 public void run() {
-                    pbPercentBuild.setMax(BuildDetailsFragment.this.building.getTimeBuilding());
-                    Long timeNow = new Date().getTime() / 1000;
-                    final Long difference = timeNow - timeStartBuilding;
-                    Double percent = Double.parseDouble(difference + "") / Double.parseDouble(BuildDetailsFragment.this.building.getTimeBuilding() + "");
-                    if (percent < 1) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                pbPercentBuild.setProgress(Integer.parseInt(difference + ""));
-                                tvTimeToBuild.setText("Temps restant : " + (building.getTimeBuilding() - difference)/60 + ":" + (building.getTimeBuilding() - difference)%60 + " minutes");
-                                pbPercentBuild.setVisibility(View.VISIBLE);
-                            }
-                        });
+                    if (getActivity()!=null){
+                        Log.d("dsfds", "Timer execution" + time.toString());
+                        pbPercentBuild.setMax(BuildDetailsFragment.this.building.getTimeBuilding());
+                        Long timeNow = new Date().getTime() / 1000;
+                        final Long difference = timeNow - timeStartBuilding;
+                        Double percent = Double.parseDouble(difference + "") / Double.parseDouble(BuildDetailsFragment.this.building.getTimeBuilding() + "");
+                        if (percent < 1) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pbPercentBuild.setProgress(Integer.parseInt(difference + ""));
+                                    tvTimeToBuild.setText("Temps restant : " + (building.getTimeBuilding() - difference)/60 + ":" + (building.getTimeBuilding() - difference)%60 + " minutes");
+                                    pbPercentBuild.setVisibility(View.VISIBLE);
+                                }
+                            });
 
-                    } else {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                BuildDetailsFragment.this.refreshBuild();
-                                BuildDetailsFragment.this.fillContent(BuildDetailsFragment.this.building);
-                                pbPercentBuild.setVisibility(View.INVISIBLE);
-                                btnBuild.setText("Construire");
-                                btnBuild.setEnabled(true);
-                                time.cancel();
-                                time.purge();
-                            }
-                        });
-
+                        } else {
+                            time.cancel();
+                            canceled = true;
+                            time.purge();
+                            Log.d("dsfds", "sfdsffdssfdsfddsf");
+                            BuildDetailsFragment.this.refreshBuild();
+                            settings.edit().remove("timeStartConstruction"+building.getName()).apply();
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    BuildDetailsFragment.this.fillContent(BuildDetailsFragment.this.building);
+                                    pbPercentBuild.setVisibility(View.INVISIBLE);
+                                    btnBuild.setText("Construire");
+                                    btnBuild.setEnabled(true);
+                                }
+                            });
+                        }
                     }
                 }
             },0,1000);
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        time.cancel();
+        canceled = true;
+    }
+
     private void refreshBuild()
     {
-        this.building.setLevel((Integer.parseInt(this.building.getLevel())+1)+"");
+        Integer lvl = Integer.parseInt(this.building.getLevel())+1;
+        this.building.setLevel(lvl+"");
         this.building.setBuilding(false+"");
     }
 
@@ -181,21 +198,40 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
         request.enqueue(new Callback<CodeResponse>() {
             @Override
             public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                if(response.code() != 200){
-                    if(building.getBuilding().equals("true")) {
-                        Toast.makeText(getContext(), "La construction n'est pas terminée !", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Toast.makeText(getContext(), "Vous n'avez pas assez de ressources !", Toast.LENGTH_LONG).show();
-                    }
-                }else{
-                    Toast.makeText(getContext(), "La construction à commencé !", Toast.LENGTH_LONG).show();
-                    Date dateCreation = new Date();
-                    Long timeConstruct = dateCreation.getTime()/1000;
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putLong("timeStartConstruction"+building.getName(), timeConstruct);
-                    editor.commit();
-                    building.setBuilding("true");
+                switch (response.code())
+                {
+                    case 200:
+                        Toast.makeText(getContext(), "La construction à commencé !", Toast.LENGTH_LONG).show();
+                        Date dateCreation = new Date();
+                        Long timeConstruct = dateCreation.getTime()/1000;
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putLong("timeStartConstruction"+building.getName(), timeConstruct);
+                        editor.commit();
+                        building.setBuilding("true");
+                        break;
+                    case 401 :
+                        String res = "";
+                        try {
+                            res = response.errorBody().string();
+                        } catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        Gson gson = new Gson();
+                        ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
+                        Toast.makeText(getContext(), er.getMessage(), Toast.LENGTH_SHORT).show();
+                        break;
+                    case 403 :
+                        Toast.makeText(getContext(), "Veuillez vous réauthentifier s'il vous plait", Toast.LENGTH_LONG).show();
+                        settings.edit().remove("token").apply();
+                        Intent myIntent = new Intent(getContext(), SignUpActivity.class);
+                        startActivity(myIntent);
+                        break;
+                    case 404 :
+                        Toast.makeText(getContext(), "Comment as tu fait pour changer mes valeurs ? Oo", Toast.LENGTH_LONG).show();
+                        break;
+                    case 500 :
+                        Toast.makeText(getContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
                 }
             }
             @Override

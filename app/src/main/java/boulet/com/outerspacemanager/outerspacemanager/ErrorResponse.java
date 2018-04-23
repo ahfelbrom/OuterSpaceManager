@@ -48,4 +48,10 @@ public class ErrorResponse {
         this.status = status;
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return "Code : " + this.getCode() + ", InternalCode : " + getInternalCode() + ", Status : "
+                + getStatus() + ", Message : " + getMessage();
+    }
 }
