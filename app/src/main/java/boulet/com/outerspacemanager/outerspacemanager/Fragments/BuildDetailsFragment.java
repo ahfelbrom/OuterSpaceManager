@@ -186,7 +186,9 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
     @Override
     public void onPause() {
         super.onPause();
-        time.cancel();
+        if (time != null) {
+            time.cancel();
+        }
     }
 
     private void refreshBuild()

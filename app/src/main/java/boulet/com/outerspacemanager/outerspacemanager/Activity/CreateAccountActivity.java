@@ -1,5 +1,6 @@
 package boulet.com.outerspacemanager.outerspacemanager.Activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     private EditText inputUsername;
     private EditText inputPassword;
     private Button btnConnect;
+    private Activity thisActivity = this;
 
 
     @Override
@@ -83,7 +85,28 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                             }
                             break;
                         case 401 :
-                            Toast.makeText(getApplicationContext(), "Problème interne à l'application, veuillez réessayer plus tard...", Toast.LENGTH_SHORT).show();
+                            String message;
+                            if (inputPassword.getText().length() == 0 && inputEmail.getText().length() != 0 && inputUsername.getText().length() != 0)
+                            {
+                                message = "Problème interne à l'application, veuileez réessayer plus tard...";
+                            }
+                            else
+                            {
+                                message = "Il manque ";
+                                if (inputUsername.getText().length() == 0)
+                                {
+                                    message += "votre nom d'utilisateur ";
+                                }
+                                if (inputEmail.getText().length() == 0)
+                                {
+                                    message += "votre mail ";
+                                }
+                                if (inputPassword.getText().length() == 0)
+                                {
+                                    message += "votre mot de passe";
+                                }
+                            }
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                             break;
                         case 500 :
                             Toast.makeText(getApplicationContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
