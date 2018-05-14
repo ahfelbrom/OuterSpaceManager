@@ -24,11 +24,6 @@
         android:textAlignment="center"
         android:text="" />
 
-    <!--<ListView
-        android:id="@+id/lvReports"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />-->
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/lvReports"
         android:scrollbars="vertical"
