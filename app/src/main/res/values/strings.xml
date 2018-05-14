@@ -32,4 +32,5 @@
     <string name="speed_fleet">Vitesse de la flotte</string>
     <string name="speed_building">Vitesse de construction</string>
     <string name="mineral_modifier">Vitesse de minage</string>
+    <string name="started_attack">L\'attaque à été lancée !</string>
 </resources>

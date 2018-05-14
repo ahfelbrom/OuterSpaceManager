@@ -1,5 +1,6 @@
 package boulet.com.outerspacemanager.outerspacemanager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -13,7 +14,10 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -37,6 +41,7 @@ public class AttackActivity extends AppCompatActivity implements View.OnClickLis
     private Button btnAttack;
     private String token;
     public static final String PREFS_NAME = "TOKEN_FILE";
+    private Activity thisActivity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +100,44 @@ public class AttackActivity extends AppCompatActivity implements View.OnClickLis
                     switch (response.code())
                     {
                         case 200:
-                            Toast.makeText(getApplicationContext(), "L'attaque à été lancée !", Toast.LENGTH_LONG).show();
+                            Calendar currentDate = Calendar.getInstance();
+                            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+
+                            String dateNow = sdf.format(currentDate.getTime());
+                            Date today =  new Date(dateNow);
+
+                            String resource = getResources().getString( getResources().getIdentifier("started_attack", "string", thisActivity.getPackageName()));
+                            Toast.makeText(getApplicationContext(), resource, Toast.LENGTH_LONG).show();
                             Date attackDate = new Date(Long.parseLong(response.body().getAttackTime()));
-                            Toast.makeText(getApplicationContext(), attackDate.toString(), Toast.LENGTH_SHORT).show();
+
+                            try {
+                                attackDate = (Date) sdf.parse("MM/dd/yyyy HH:mm:ss");
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            long numberOfMiliSeconds=(long)((attackDate.getTime()-today.getTime()));
+
+                            if (numberOfMiliSeconds <= 0)
+                            {
+                                Toast.makeText(getApplicationContext(), "Vous pouvez voir le résultat de l'attaque dès maintenant !", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                String hours = new SimpleDateFormat("HH").format(new Date(numberOfMiliSeconds));
+                                String minutes = new SimpleDateFormat("mm").format(new Date(numberOfMiliSeconds));
+                                String seconds = new SimpleDateFormat("ss").format(new Date(numberOfMiliSeconds));
+                                String toShow = "Vous pourrez voir le résultat dans ";
+                                if (!hours.equals("00"))
+                                {
+                                    toShow += hours + " h ";
+                                }
+                                if (!minutes.equals("00") || !hours.equals("00"))
+                                {
+                                    toShow += minutes + " min ";
+                                }
+                                toShow += seconds + " sec";
+                                Toast.makeText(getApplicationContext(),  toShow, Toast.LENGTH_SHORT).show();
+                            }
                             Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(myIntent);
                             break;
