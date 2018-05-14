@@ -106,8 +106,8 @@ public class AttackActivity extends AppCompatActivity implements View.OnClickLis
                             String dateNow = sdf.format(currentDate.getTime());
                             Date today =  new Date(dateNow);
 
-                            String resource = getResources().getString( getResources().getIdentifier("started_attack", "string", thisActivity.getPackageName()));
-                            Toast.makeText(getApplicationContext(), resource, Toast.LENGTH_LONG).show();
+                            String resourceAttackStarted = getResources().getString( getResources().getIdentifier("started_attack", "string", thisActivity.getPackageName()));
+                            Toast.makeText(getApplicationContext(), resourceAttackStarted, Toast.LENGTH_LONG).show();
                             Date attackDate = new Date(Long.parseLong(response.body().getAttackTime()));
 
                             try {
@@ -119,14 +119,15 @@ public class AttackActivity extends AppCompatActivity implements View.OnClickLis
 
                             if (numberOfMiliSeconds <= 0)
                             {
-                                Toast.makeText(getApplicationContext(), "Vous pouvez voir le résultat de l'attaque dès maintenant !", Toast.LENGTH_SHORT).show();
+                                String resourceSeeResultNow = getResources().getString( getResources().getIdentifier("see_result_now", "string", thisActivity.getPackageName()));
+                                Toast.makeText(getApplicationContext(), resourceSeeResultNow, Toast.LENGTH_SHORT).show();
                             }
                             else
                             {
                                 String hours = new SimpleDateFormat("HH").format(new Date(numberOfMiliSeconds));
                                 String minutes = new SimpleDateFormat("mm").format(new Date(numberOfMiliSeconds));
                                 String seconds = new SimpleDateFormat("ss").format(new Date(numberOfMiliSeconds));
-                                String toShow = "Vous pourrez voir le résultat dans ";
+                                String toShow = getResources().getString( getResources().getIdentifier("see_result_in", "string", thisActivity.getPackageName()));
                                 if (!hours.equals("00"))
                                 {
                                     toShow += hours + " h ";
@@ -149,13 +150,15 @@ public class AttackActivity extends AppCompatActivity implements View.OnClickLis
                             {
                                 e.printStackTrace();
                             }
-                            Toast.makeText(getApplicationContext(), "Requête invalide, pas assez de vaisseau ou une sorte de truc comme ça", Toast.LENGTH_SHORT).show();
+                            String resourceInvalidRequest = getResources().getString( getResources().getIdentifier("not_enough_ships", "string", thisActivity.getPackageName()));
+                            Toast.makeText(getApplicationContext(), resourceInvalidRequest, Toast.LENGTH_SHORT).show();
                             break;
                         case 404 :
                             Toast.makeText(getApplicationContext(), "Comment as tu fait pour changer mes valeurs ? Oo", Toast.LENGTH_LONG).show();
                             break;
                         case 500 :
-                            Toast.makeText(getApplicationContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
+                            String resourceApiProblem = getResources().getString( getResources().getIdentifier("api_problem", "string", thisActivity.getPackageName()));
+                            Toast.makeText(getApplicationContext(), resourceApiProblem, Toast.LENGTH_LONG).show();
                             break;
                     }
                 }

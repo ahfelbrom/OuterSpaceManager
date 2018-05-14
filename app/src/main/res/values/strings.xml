@@ -33,4 +33,8 @@
     <string name="speed_building">Vitesse de construction</string>
     <string name="mineral_modifier">Vitesse de minage</string>
     <string name="started_attack">L\'attaque à été lancée !</string>
+    <string name="see_result_now">Vous pouvez voir le résultat de l\'attaque dès maintenant !</string>
+    <string name="see_result_in">Vous pourrez voir le résultat dans </string>
+    <string name="not_enough_ships">Requête invalide, pas assez de vaisseau ou une sorte de truc comme ça</string>
+    <string name="api_problem">Problème interne de l'API, réessayez plus tard...</string>
 </resources>
