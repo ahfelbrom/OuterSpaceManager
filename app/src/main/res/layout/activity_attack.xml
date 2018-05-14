@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2.5"
-            android:text="@string/lightShip"
+            android:text="@string/light_ship"
             android:textSize="18sp" />
 
         <EditText
@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
-            android:hint="@string/numBerLightShip" />
+            android:hint="@string/number_light_ship" />
     </LinearLayout>
 
     <LinearLayout
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2.5"
-            android:text="@string/heavyShip"
+            android:text="@string/heavy_ship"
             android:textSize="18sp" />
 
         <EditText
@@ -51,7 +51,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
-            android:hint="@string/numberHeavyShip" />
+            android:hint="@string/number_heavy_ship" />
     </LinearLayout>
 
     <LinearLayout
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.4"
-            android:text="@string/spyShip"
+            android:text="@string/spy_ship"
             android:textSize="18sp" />
 
         <EditText
@@ -74,7 +74,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
-            android:hint="@string/numberSpyShip" />
+            android:hint="@string/number_spy_ship" />
     </LinearLayout>
 
     <LinearLayout
@@ -97,7 +97,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
-            android:hint="@string/numberDestroyer" />
+            android:hint="@string/number_destroyer" />
     </LinearLayout>
 
     <LinearLayout
@@ -110,7 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="@string/deathStar"
+            android:text="@string/death_star"
             android:textSize="18sp" />
 
         <EditText
@@ -120,7 +120,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
-            android:hint="@string/numberDeathStar" />
+            android:hint="@string/number_death_star" />
     </LinearLayout>
 
     <LinearLayout
