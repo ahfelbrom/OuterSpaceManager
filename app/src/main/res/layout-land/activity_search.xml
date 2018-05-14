@@ -16,14 +16,14 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:name="boulet.com.outerspacemanager.outerspacemanager.SearchListFragment"
+        android:name="boulet.com.outerspacemanager.outerspacemanager.Fragments.SearchListFragment"
         android:id="@+id/fragSearchList" />
 
     <fragment
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:name="boulet.com.outerspacemanager.outerspacemanager.SearchDetailsFragment"
+        android:name="boulet.com.outerspacemanager.outerspacemanager.Fragments.SearchDetailsFragment"
         android:id="@+id/fragSearchDetails"
         android:layout_gravity="center_vertical" />
 </LinearLayout>

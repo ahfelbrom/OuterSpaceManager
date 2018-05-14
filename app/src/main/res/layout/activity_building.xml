@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/pretty_image"
-    tools:context="boulet.com.outerspacemanager.outerspacemanager.BuildingActivity"
+    tools:context="boulet.com.outerspacemanager.outerspacemanager.Activity.BuildingActivity"
     android:orientation="vertical">
 
 
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:name="boulet.com.outerspacemanager.outerspacemanager.BuildListFragment"
+        android:name="boulet.com.outerspacemanager.outerspacemanager.Fragments.BuildListFragment"
         android:id="@+id/fragList" />
 
     <!-- <ListView

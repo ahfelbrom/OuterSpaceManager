@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/fragSearchDetails"
-        android:name="boulet.com.outerspacemanager.outerspacemanager.SearchDetailsFragment"
+        android:name="boulet.com.outerspacemanager.outerspacemanager.Fragments.SearchDetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"

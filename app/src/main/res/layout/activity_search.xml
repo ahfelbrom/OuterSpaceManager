@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/pretty_image"
-    tools:context="boulet.com.outerspacemanager.outerspacemanager.SearchActivity"
+    tools:context="boulet.com.outerspacemanager.outerspacemanager.Activity.SearchActivity"
     android:orientation="vertical">
 
 
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:name="boulet.com.outerspacemanager.outerspacemanager.SearchListFragment"
+        android:name="boulet.com.outerspacemanager.outerspacemanager.Fragments.SearchListFragment"
         android:id="@+id/fragSearchList" />
 
 </LinearLayout>

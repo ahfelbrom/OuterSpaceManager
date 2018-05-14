@@ -10,25 +10,25 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".SignUpActivity">
+        <activity android:name=".Activity.SignUpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateAccountActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".GalaxyActivity" />
-        <activity android:name=".BuildingActivity" />
-        <activity android:name=".BuildingDetailsActivity" />
-        <activity android:name=".GeneralActivity" />
-        <activity android:name=".FlotteActivity" />
-        <activity android:name=".VaisseauActivity" />
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".SearchDetailsActivity" />
-        <activity android:name=".ChantierActivity" />
-        <activity android:name=".AttackActivity"></activity>
+        <activity android:name=".Activity.CreateAccountActivity" />
+        <activity android:name=".Activity.MainActivity" />
+        <activity android:name=".Activity.GalaxyActivity" />
+        <activity android:name=".Activity.BuildingActivity" />
+        <activity android:name=".Activity.BuildingDetailsActivity" />
+        <activity android:name=".Activity.GeneralActivity" />
+        <activity android:name=".Activity.FlotteActivity" />
+        <activity android:name=".Activity.VaisseauActivity" />
+        <activity android:name=".Activity.SearchActivity" />
+        <activity android:name=".Activity.SearchDetailsActivity" />
+        <activity android:name=".Activity.ChantierActivity" />
+        <activity android:name=".Activity.AttackActivity"></activity>
     </application>
 
 </manifest>

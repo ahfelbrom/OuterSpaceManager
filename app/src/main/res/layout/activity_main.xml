@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@drawable/pretty_image"
     android:layout_height="match_parent"
-    tools:context="boulet.com.outerspacemanager.outerspacemanager.MainActivity">
+    tools:context="boulet.com.outerspacemanager.outerspacemanager.Activity.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

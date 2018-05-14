@@ -15,7 +15,7 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:name="boulet.com.outerspacemanager.outerspacemanager.BuildDetailsFragment"
+        android:name="boulet.com.outerspacemanager.outerspacemanager.Fragments.BuildDetailsFragment"
         android:id="@+id/fragDetails"
         android:layout_gravity="right" />
 </LinearLayout>
