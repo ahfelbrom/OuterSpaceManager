@@ -69,19 +69,18 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                             }
                             Gson gson = new Gson();
                             ErrorResponse er = gson.fromJson(raiponce, ErrorResponse.class);
-                            Toast.makeText(getApplicationContext(), er.getMessage(), Toast.LENGTH_SHORT).show();
+                            switch (er.getInternalCode())
+                            {
+                                case "already_registered_username":
+                                    Toast.makeText(getApplicationContext(), "L'identifiant existe déjà, il va falloir être un peu plus créatif l'ami", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "already_registered_email":
+                                    Toast.makeText(getApplicationContext(), "L'email entré existe déjà, tu as peut-être déjà un compte chez OSMEntreprises", Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
                             break;
                         case 401 :
-                            String res = "";
-                            try {
-                                res = response.errorBody().string();
-                            } catch (IOException e)
-                            {
-                                e.printStackTrace();
-                            }
-                            Gson gsonb = new Gson();
-                            ErrorResponse erb = gsonb.fromJson(res, ErrorResponse.class);
-                            Toast.makeText(getApplicationContext(), erb.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Problème interne à l'application, veuillez réessayer plus tard...", Toast.LENGTH_SHORT).show();
                             break;
                         case 500 :
                             Toast.makeText(getApplicationContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();

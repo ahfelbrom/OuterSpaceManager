@@ -33,7 +33,7 @@ public class ChantierActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chantier);
       
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
         lvReports = findViewById(R.id.lvReports);
         Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager-staging.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
@@ -49,16 +49,13 @@ public class ChantierActivity extends AppCompatActivity {
                         lvReports.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, reports.getReports()));
                         break;
                     case 401 :
-                        String res = "";
-                        try {
-                            res = response.errorBody().string();
-                        } catch (IOException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        Gson gson = new Gson();
-                        ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
-                        Toast.makeText(getApplicationContext(), er.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Il va falloir se réauthentifier, désolé ^^'", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 403 :
+                        Toast.makeText(getApplicationContext(), "Veuillez vous réauthentifier s'il vous plait", Toast.LENGTH_LONG).show();
+                        settings.edit().remove("token").apply();
+                        Intent myIntent = new Intent(getApplicationContext(), SignUpActivity.class);
+                        startActivity(myIntent);
                         break;
                     case 500 :
                         Toast.makeText(getApplicationContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();

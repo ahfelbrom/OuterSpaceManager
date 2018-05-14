@@ -79,16 +79,7 @@ public class BuildingActivity extends AppCompatActivity implements AdapterView.O
                         listBuilding.setAdapter(adapter);
                         break;
                     case 401 :
-                        String res = "";
-                        try {
-                            res = response.errorBody().string();
-                        } catch (IOException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        Gson gson = new Gson();
-                        ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
-                        Toast.makeText(getApplicationContext(), er.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Y'a eu un problème Sir, t'as du glisser chef ou quelque chose comme ça, il va falloir se réauthentifier", Toast.LENGTH_SHORT).show();
                         break;
                     case 403 :
                         Toast.makeText(getApplicationContext(), "Veuillez vous réauthentifier s'il vous plait", Toast.LENGTH_LONG).show();

@@ -34,15 +34,6 @@ public class BuildingDetailsActivity extends AppCompatActivity implements View.O
         Building building = json.fromJson(jsonBuilding, Building.class);
         final BuildDetailsFragment fragB = (BuildDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.fragDetails);
         fragB.fillContent(building);
-        if (building.isBuilding())
-        {
-            new Timer().scheduleAtFixedRate(new TimerTask(){
-                @Override
-                public void run(){
-                    fragB.updateProgressBar();
-                }},0,5000);
-        }
-
     }
 
     @Override

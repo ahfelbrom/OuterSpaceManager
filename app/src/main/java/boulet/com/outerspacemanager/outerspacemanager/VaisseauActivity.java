@@ -44,7 +44,7 @@ public class VaisseauActivity extends AppCompatActivity implements AdapterView.O
         listShips = findViewById(R.id.listViewFlotte);
         listShips.setOnItemClickListener(this);
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
 
         Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager-staging.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
@@ -54,6 +54,26 @@ public class VaisseauActivity extends AppCompatActivity implements AdapterView.O
         request.enqueue(new Callback<Ships>() {
             @Override
             public void onResponse(Call<Ships> call, Response<Ships> response) {
+                switch (response.code())
+                {
+                    case 200:
+                        flotte = response.body().getShips();
+                        FlotteAdapter adapter = new FlotteAdapter(getApplicationContext(), flotte );
+                        listShips.setAdapter(adapter);
+                        break;
+                    case 403 :
+                        Toast.makeText(getApplicationContext(), "Veuillez vous réauthentifier s'il vous plait", Toast.LENGTH_LONG).show();
+                        settings.edit().remove("token").apply();
+                        Intent myIntent = new Intent(getApplicationContext(), SignUpActivity.class);
+                        startActivity(myIntent);
+                        break;
+                    case 404:
+                        Toast.makeText(getApplicationContext(), "Revérifie le code chef, c'est buggé", Toast.LENGTH_LONG).show();
+                        break;
+                    case 500 :
+                        Toast.makeText(getApplicationContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
+                        break;
+                }
                 if(response.code() != 200){
                     Toast.makeText(getApplicationContext(), "Une erreur est survenue !", Toast.LENGTH_LONG).show();
 
@@ -62,14 +82,6 @@ public class VaisseauActivity extends AppCompatActivity implements AdapterView.O
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }else{
-                    flotte = response.body().getShips();
-                    if (flotte.length == 0)
-                    {
-                        Toast.makeText(getApplicationContext(), "Pas de ships :'(", Toast.LENGTH_LONG).show();
-                    }
-                    FlotteAdapter adapter = new FlotteAdapter(getApplicationContext(), flotte );
-                    listShips.setAdapter(adapter);
                 }
             }
 

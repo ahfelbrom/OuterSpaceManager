@@ -109,9 +109,7 @@ public class AttackActivity extends AppCompatActivity implements View.OnClickLis
                             {
                                 e.printStackTrace();
                             }
-                            Gson gson = new Gson();
-                            ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
-                            Toast.makeText(getApplicationContext(), er.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Requête invalide, pas assez de vaisseau ou une sorte de truc comme ça", Toast.LENGTH_SHORT).show();
                             break;
                         case 404 :
                             Toast.makeText(getApplicationContext(), "Comment as tu fait pour changer mes valeurs ? Oo", Toast.LENGTH_LONG).show();

@@ -15,6 +15,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,8 +27,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class SearchDetailsFragment extends Fragment implements View.OnClickListener {
-    public static final String PREFS_NAME = "TOKEN_FILE";
-    private String token;
     private Search search;
     private Integer index;
     private Button btnBuildSearch;
@@ -36,12 +38,15 @@ public class SearchDetailsFragment extends Fragment implements View.OnClickListe
     private TextView tvTimeToBuild;
     private TextView tvCost;
     private TextView tvLevel;
+    public static final String PREFS_NAME = "TOKEN_FILE";
+    private String token;
+    private SharedPreferences settings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View v = inflater.inflate(R.layout.fragment_search_details,container);
-        SharedPreferences settings = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
+        settings = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
         btnBuildSearch = v.findViewById(R.id.btnBuildSearch);
         btnBuildSearch.setOnClickListener(this);
@@ -53,6 +58,8 @@ public class SearchDetailsFragment extends Fragment implements View.OnClickListe
         tvCost = v.findViewById(R.id.tvCost);
         tvMineralCost = v.findViewById(R.id.tvMineralCost);
         tvTimeToBuild = v.findViewById(R.id.tvTimeToBuild);
+        token = settings.getString("token","");
+
         return v;
     }
 
@@ -99,15 +106,48 @@ public class SearchDetailsFragment extends Fragment implements View.OnClickListe
         request.enqueue(new Callback<CodeResponse>() {
             @Override
             public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                if(response.code() != 200){
-                    if(search.getBuilding().equals("true"))
-                        Toast.makeText(getContext(), "La recherche n'est pas terminée !", Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(getContext(), "Vous n'avez pas assez de ressources !", Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(getContext(), "La recherche à commencé !", Toast.LENGTH_LONG).show();
+                switch (response.code())
+                {
+                    case 200:
+                        Toast.makeText(getContext(), "La recherche à commencé !", Toast.LENGTH_LONG).show();
 
-                    Double time =  Double.parseDouble(search.getTimeToBuildLevel0()) + ( Double.parseDouble(search.getTimeToBuildByLevel()) * Double.parseDouble(search.getLevel()));
+                        Double time =  Double.parseDouble(search.getTimeToBuildLevel0()) + ( Double.parseDouble(search.getTimeToBuildByLevel()) * Double.parseDouble(search.getLevel()));
+                        break;
+                    case 401 :
+                        String res = "";
+                        try {
+                            res = response.errorBody().string();
+                        } catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        Gson gson = new Gson();
+                        ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
+                        switch (er.getInternalCode())
+                        {
+                            case "invalid_request":
+                                Toast.makeText(getContext(), "Requête invalide, c'est pas bien de casser le code :c", Toast.LENGTH_LONG).show();
+                                break;
+                            case "not_enough_resources":
+                                Toast.makeText(getContext(), "Vous n'avez pas assez de ressources pour démarer la recherche voulue", Toast.LENGTH_LONG).show();
+                                break;
+                            case "already_in_queue":
+                                Toast.makeText(getContext(), "La recherche a déjà comencée", Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                        break;
+                    case 403 :
+                        Toast.makeText(getContext(), "Veuillez vous réauthentifier s'il vous plait", Toast.LENGTH_LONG).show();
+                        settings.edit().remove("token").apply();
+                        Intent myIntent = new Intent(getContext(), SignUpActivity.class);
+                        startActivity(myIntent);
+                        break;
+                    case 404:
+                        Toast.makeText(getContext(), "Aucune recherche trouvée, arrête de casser mon code, ça va te mener à rien", Toast.LENGTH_LONG).show();
+                        break;
+                    case 500 :
+                        Toast.makeText(getContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
+                        break;
                 }
             }
             @Override

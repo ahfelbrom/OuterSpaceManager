@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -44,7 +45,7 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
         btnReturnMenu = findViewById(R.id.btnReturnMenu);
         btnReturnMenu.setOnClickListener(this);
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
 
         Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager-staging.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
@@ -54,22 +55,29 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
         request.enqueue(new Callback<Ships>() {
             @Override
             public void onResponse(Call<Ships> call, Response<Ships> response) {
-                if(response.code() != 200){
-                    Toast.makeText(getApplicationContext(), "Une erreur est survenue !", Toast.LENGTH_LONG).show();
-
-                    try {
-                        Toast.makeText(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }else{
-                    flotte = response.body().getShips();
-                    if (flotte.length == 0)
-                    {
-                        Toast.makeText(getApplicationContext(), "Pas de ships :'(", Toast.LENGTH_LONG).show();
-                    }
-                    FlotteAdapter adapter = new FlotteAdapter(getApplicationContext(), flotte );
-                    listShips.setAdapter(adapter);
+                switch (response.code())
+                {
+                    case 200:
+                        flotte = response.body().getShips();
+                        if (flotte.length == 0)
+                        {
+                            Toast.makeText(getApplicationContext(), "Pas de vaisseaux, pas de chocolat !", Toast.LENGTH_LONG).show();
+                        }
+                        FlotteAdapter adapter = new FlotteAdapter(getApplicationContext(), flotte );
+                        listShips.setAdapter(adapter);
+                        break;
+                    case 401 :
+                        Toast.makeText(getApplicationContext(), "Il va falloir se réauthentifier, désolé ^^'", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 403 :
+                        Toast.makeText(getApplicationContext(), "Veuillez vous réauthentifier s'il vous plait", Toast.LENGTH_LONG).show();
+                        settings.edit().remove("token").apply();
+                        Intent myIntent = new Intent(getApplicationContext(), SignUpActivity.class);
+                        startActivity(myIntent);
+                        break;
+                    case 500 :
+                        Toast.makeText(getApplicationContext(), "Problème interne de l'API, réessayez plus tard...", Toast.LENGTH_LONG).show();
+                        break;
                 }
             }
 
@@ -106,7 +114,18 @@ public class FlotteActivity extends AppCompatActivity implements AdapterView.OnI
                         }
                         Gson gson = new Gson();
                         ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
-                        Toast.makeText(getApplicationContext(), er.getMessage(), Toast.LENGTH_LONG).show();
+                        switch (er.getInternalCode())
+                        {
+                            case "invalid_request":
+                                Toast.makeText(getApplicationContext(), "Requête invalide, c'est pas bien de casser le code :c", Toast.LENGTH_LONG).show();
+                                break;
+                            case "not_enough_resources":
+                                Toast.makeText(getApplicationContext(), "Vous n'avez pas assez de ressources pour construire le vaisseau demandé", Toast.LENGTH_LONG).show();
+                                break;
+                            case "insufficient_spaceport_level":
+                                Toast.makeText(getApplicationContext(), "Il va falloir augmenter le niveau du bâtiment spacioport pour avoir un vaisseau comme cela", Toast.LENGTH_LONG).show();
+                                break;
+                        }
                         break;
                     case 404 :
                         Toast.makeText(getApplicationContext(), "N'essaie pas de casser mon code pls :'(", Toast.LENGTH_SHORT).show();

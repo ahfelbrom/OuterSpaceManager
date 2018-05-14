@@ -38,7 +38,7 @@ public class GeneralActivity extends AppCompatActivity implements View.OnClickLi
         tvMineralShow = findViewById(R.id.tvMineralShow);
         btnMenuGeneral = findViewById(R.id.btnMenuGeneral);
         btnMenuGeneral.setOnClickListener(this);
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
         timer = new Timer();
         Retrofit retrofit= new Retrofit.Builder().baseUrl("https://outer-space-manager-staging.herokuapp.com").addConverterFactory(GsonConverterFactory.create()).build();
@@ -52,7 +52,10 @@ public class GeneralActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                         if(response.code() != 200){
-                            Toast.makeText(getApplicationContext(), "Une erreur est survenue !", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Veuillez vous réauthentifier s'il vous plait", Toast.LENGTH_LONG).show();
+                            settings.edit().remove("token").apply();
+                            Intent myIntent = new Intent(getApplicationContext(), SignUpActivity.class);
+                            startActivity(myIntent);
                         }
                         else
                         {

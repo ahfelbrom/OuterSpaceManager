@@ -59,7 +59,6 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
     private Long timeStartBuilding;
     private SharedPreferences settings;
     private Timer time;
-    private boolean canceled = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -79,8 +78,6 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
         btnBuild.setOnClickListener(this);
         settings = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
         token = settings.getString("token","");
-
-        time = new Timer();
 
         return v;
     }
@@ -120,15 +117,16 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
         }
         btnBuild.setVisibility(View.VISIBLE);
         tvCost.setVisibility(View.VISIBLE);
+
+        this.setTimer();
+        this.updateProgressBar();
     }
 
     public void updateProgressBar()
     {
-        if (this.building.isBuilding())
+        if (this.building.isBuilding() && timeStartBuilding != 0)
         {
-            if (canceled) {
-                time = new Timer();
-            }
+            this.setTimer();
             time.scheduleAtFixedRate(new TimerTask(){
                 @Override
                 public void run() {
@@ -150,7 +148,6 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
 
                         } else {
                             time.cancel();
-                            canceled = true;
                             time.purge();
                             Log.d("dsfds", "sfdsffdssfdsfddsf");
                             BuildDetailsFragment.this.refreshBuild();
@@ -166,16 +163,32 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
                             });
                         }
                     }
+
                 }
             },0,1000);
         }
+        else
+        {
+            pbPercentBuild.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void setTimer()
+    {
+        try{
+            time.cancel();
+            time.purge();
+        }catch(Exception e)
+        {
+
+        }
+        time = new Timer();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         time.cancel();
-        canceled = true;
     }
 
     private void refreshBuild()
@@ -214,7 +227,18 @@ public class BuildDetailsFragment extends Fragment implements View.OnClickListen
                         }
                         Gson gson = new Gson();
                         ErrorResponse er = gson.fromJson(res, ErrorResponse.class);
-                        Toast.makeText(getContext(), er.getMessage(), Toast.LENGTH_SHORT).show();
+                        switch (er.getInternalCode())
+                        {
+                            case "invalid_request":
+                                Toast.makeText(getContext(), "Il manque une information, c'est un problème :c", Toast.LENGTH_SHORT).show();
+                                break;
+                            case "already_in_queue":
+                                Toast.makeText(getContext(), "T'es pas censé avoir un bouton disabled toi ? T'es pas cool hein !", Toast.LENGTH_SHORT).show();
+                                break;
+                            case "not_enough_resources":
+                                Toast.makeText(getContext(), "Tu n'as pas assez de ressources pour créer ce bâtiment, patiente un peu stp :D", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
                         break;
                     case 403 :
                         Toast.makeText(getContext(), "Veuillez vous réauthentifier s'il vous plait", Toast.LENGTH_LONG).show();
