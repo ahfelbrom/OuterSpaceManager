@@ -4,7 +4,7 @@ package boulet.com.outerspacemanager.outerspacemanager.Model;
  * Created by aboulet on 09/04/2018.
  */
 
-class Report {
+public class Report {
     private ShipReport[] attackerFleet;
     private ShipReport attackerFleetAfterBattle;
     private String date;
